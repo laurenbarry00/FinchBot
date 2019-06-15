@@ -6,6 +6,7 @@ import com.sicaga.finchbot.commands.ClearReactionsCommand;
 import com.sicaga.finchbot.commands.RemoveReactionCommand;
 import com.sicaga.finchbot.event.MessageReactionAddListener;
 import com.sicaga.finchbot.event.MessageReactionRemoveListener;
+import com.sicaga.finchbot.event.MessageReceivedListener;
 import com.sicaga.finchbot.event.ReadyListener;
 import com.sicaga.finchbot.util.Config;
 import net.dv8tion.jda.core.AccountType;
@@ -65,6 +66,7 @@ public class FinchBot {
                 .addEventListener(new ReadyListener())
                 .addEventListener(new MessageReactionAddListener())
                 .addEventListener(new MessageReactionRemoveListener())
+                .addEventListener(new MessageReceivedListener())
 
                 // start it up!
                 .build();
