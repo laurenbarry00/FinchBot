@@ -23,5 +23,5 @@
 hs_err_pid*
 
 src/config.json
-.idea/
+.idea/*.*
 target/
