@@ -2,6 +2,7 @@ package com.sicaga.finchbot;
 
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.sicaga.finchbot.event.ReadyListener;
 import com.sicaga.finchbot.util.Config;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
@@ -45,8 +46,6 @@ public class FinchBot {
         );
         */
 
-        new JDABuilder(AccountType.BOT)
-                .setToken(token)
 
         jda = new JDABuilder(AccountType.BOT)
                 .setToken(config.getToken())
@@ -55,10 +54,12 @@ public class FinchBot {
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
                 .setGame(Game.playing("Loading..."))
 
-                // add the command and waiter listeners
                 // add the command and waiter event
                 .addEventListener(waiter)
                 .addEventListener(client.build())
+
+                // add our own event listeners
+                .addEventListener(new ReadyListener())
 
                 // start it up!
                 .build();
