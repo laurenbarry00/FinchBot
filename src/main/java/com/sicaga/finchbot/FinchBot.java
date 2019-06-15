@@ -2,6 +2,8 @@ package com.sicaga.finchbot;
 
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.sicaga.finchbot.event.MessageReactionAddListener;
+import com.sicaga.finchbot.event.MessageReactionRemoveListener;
 import com.sicaga.finchbot.event.ReadyListener;
 import com.sicaga.finchbot.util.Config;
 import net.dv8tion.jda.core.AccountType;
@@ -60,6 +62,8 @@ public class FinchBot {
 
                 // add our own event listeners
                 .addEventListener(new ReadyListener())
+                .addEventListener(new MessageReactionAddListener())
+                .addEventListener(new MessageReactionRemoveListener())
 
                 // start it up!
                 .build();
