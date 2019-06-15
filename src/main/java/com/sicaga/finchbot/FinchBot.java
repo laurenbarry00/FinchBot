@@ -2,6 +2,7 @@ package com.sicaga.finchbot;
 
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
+import com.sicaga.finchbot.commands.ClearReactionsCommand;
 import com.sicaga.finchbot.event.MessageReactionAddListener;
 import com.sicaga.finchbot.event.MessageReactionRemoveListener;
 import com.sicaga.finchbot.event.ReadyListener;
@@ -45,6 +46,7 @@ public class FinchBot {
         /*
         client.addCommands(
 
+                new ClearReactionsCommand()
         );
         */
 
