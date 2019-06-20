@@ -19,6 +19,10 @@ public class ReadyListener extends ListenerAdapter {
 
         Guild sicaga = FinchBot.jda.getGuildById(464369469595058176L);
 
+        if (FinchBot.config.isDevModeEnabled()) {
+            System.out.println("\nEmotes:\n" + sicaga.getEmotes() + "\n");
+        }
+
         TextChannel channel = sicaga.getTextChannelById(588556612088627231L); // this is the channel where the role assignment will take place
 
         HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.config.getTrackedMessages();
