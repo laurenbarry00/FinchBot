@@ -41,12 +41,17 @@ public class MessageReactionAddListener extends ListenerAdapter {
 
                         if (pair.isShouldRemoveEmoteAferAdding()) { // Clear all of the other color roles off of the user
 
-                            for (RoleEmotePair rep : reps) {
-                                if (rep.isShouldRemoveEmoteAferAdding()) {
-                                    gc.removeRolesFromMember(event.getMember(), rep.getRole()).complete(); // Remove the role.
-                                    // This is .complete() because we need to ensure the roles are removed before adding the new one
+                            for (String message : keys) {
+                                ArrayList<RoleEmotePair> pairs = trackedMessages.get(message);
+
+                                for (RoleEmotePair rep : pairs) {
+                                    if (rep.isShouldRemoveEmoteAferAdding()) {
+                                        gc.removeRolesFromMember(event.getMember(), rep.getRole()).complete(); // Remove the role.
+                                        // This is .complete() because we need to ensure the roles are removed before adding the new one
+                                    }
                                 }
                             }
+
 
                             event.getReaction().removeReaction(event.getUser()).queue(); // only remove the reaction if it's not a color role
                         }

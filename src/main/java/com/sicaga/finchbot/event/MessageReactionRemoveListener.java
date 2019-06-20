@@ -24,17 +24,20 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
             // The message is one that we're tracking
             ArrayList<RoleEmotePair> reps = trackedMessages.get(event.getMessageId());
             for (RoleEmotePair pair : reps) {
+                if (pair.isShouldRemoveEmoteAferAdding()) {
+                    return;
+                }
                 if (event.getReactionEmote().getId() == null) {
                     if (event.getReactionEmote().getName().equals(pair.getEmote()) && !pair.isShouldRemoveEmoteAferAdding()) {
                         Role role = pair.getRole();
                         GuildController gc = new GuildController(sicaga);
-                        gc.removeSingleRoleFromMember(event.getMember(), role).queue(); // Remove the role
+                        gc.removeSingleRoleFromMember(event.getMember(), role).complete(); // Remove the role
                     }
                 } else {
                     if (event.getReactionEmote().getId().equals(pair.getEmote()) && !pair.isShouldRemoveEmoteAferAdding()) {
                         Role role = pair.getRole();
                         GuildController gc = new GuildController(sicaga);
-                        gc.removeSingleRoleFromMember(event.getMember(), role).queue(); // Remove the role
+                        gc.removeSingleRoleFromMember(event.getMember(), role).complete(); // Remove the role
 
                     }
                 }
