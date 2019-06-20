@@ -3,6 +3,7 @@ package com.sicaga.finchbot;
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.sicaga.finchbot.commands.ClearReactionsCommand;
+import com.sicaga.finchbot.commands.PostEmoteChoicesCommand;
 import com.sicaga.finchbot.commands.RemoveReactionCommand;
 import com.sicaga.finchbot.event.MessageReactionAddListener;
 import com.sicaga.finchbot.event.MessageReactionRemoveListener;
@@ -50,7 +51,8 @@ public class FinchBot {
         // add commands to the command handler here
         client.addCommands(
                 new RemoveReactionCommand(),
-                new ClearReactionsCommand()
+                new ClearReactionsCommand(),
+                new PostEmoteChoicesCommand()
         );
 
 
