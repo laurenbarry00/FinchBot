@@ -16,6 +16,7 @@ import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
 
 import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
 
 public class FinchBot {
     public static JDA jda;
@@ -38,6 +39,8 @@ public class FinchBot {
         }
 
         client.setOwnerId(config.getOwnerId());
+        client.setCoOwnerIds("108992296896196608", "156651495884849153");
+
 
         // Set emojis for successes, warnings, and failures
         client.setEmojis("\u2705", "\u26A0", "\u274C");
