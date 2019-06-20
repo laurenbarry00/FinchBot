@@ -1,6 +1,7 @@
 package com.sicaga.finchbot.event;
 
 import com.sicaga.finchbot.FinchBot;
+import com.sicaga.finchbot.commands.PostEmoteChoicesCommand;
 import com.sicaga.finchbot.util.RoleEmotePair;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.ReadyEvent;
@@ -23,8 +24,10 @@ public class ReadyListener extends ListenerAdapter {
             System.out.println("\nEmotes:\n" + sicaga.getEmotes() + "\n");
         }
 
+        // TODO: Change channel to be loaded in via config instead of hard-coded
         TextChannel channel = sicaga.getTextChannelById(588556612088627231L); // this is the channel where the role assignment will take place
 
+        // Get all of the tracked messages
         HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.config.getTrackedMessages();
         Set<String> keys = trackedMessages.keySet();
 
@@ -36,11 +39,10 @@ public class ReadyListener extends ListenerAdapter {
 
             for (RoleEmotePair rep : reps) {
                 try { // Emote string is in UTF-8 format
-                    message.addReaction(rep.getEmote()).complete(); // Must be .complete() as
-                    // that will throw the runtimeexception (that we catch below) if it is a custom emote
+                    message.addReaction(rep.getEmote()).complete(); // Must be .complete() as that will throw the runtimeexception (that we catch below) if it is a custom emote
                 } catch (ErrorResponseException e) { // Custom emote, need to create an Emote object and then pass it to addReaction()
                     Emote emote = sicaga.getEmoteById(rep.getEmote());
-                    message.addReaction(emote).queue();
+                    message.addReaction(emote).complete(); // This needs to be not asynchronous to make sure that the colors are added in the right order
                 }
             }
         }
