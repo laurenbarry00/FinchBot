@@ -70,7 +70,7 @@ public class Config {
             JsonParser parser = new JsonParser();
 
             // Parse the json from file and create a JsonObject of the whole thing
-            JsonObject root = (JsonObject) parser.parse(new FileReader("src/config.json"));
+            JsonObject root = (JsonObject) parser.parse(new FileReader("config.json"));
 
             // Get token, owner ID, and dev mode status
             this.token = root.get("token").getAsString();
@@ -97,7 +97,7 @@ public class Config {
             JsonParser parser = new JsonParser();
 
             // Parse the json from file and create a JsonObject of the whole thing
-            JsonObject root = (JsonObject) parser.parse(new FileReader("src/config.json"));
+            JsonObject root = (JsonObject) parser.parse(new FileReader("config.json"));
 
             // initialize and populate the list of tracked message IDs
             trackedMessages = new HashMap<>();

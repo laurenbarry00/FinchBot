@@ -1,0 +1,89 @@
+{
+	"token": "NTg4NDk3NTg2ODkwMDgwMjU2.XQGBsA.qNONzQYPS10EtX-yblwwZPsYt2Q", // PRIVATE
+	"ownerId": "222047130007764993", // ironohki 
+	"guildId": "464369469595058176",
+	"prefix": "?",
+	"dev": {
+		"devModeEnabled": true,
+		"devUserIds": [ // co-owners, can use owner-only commands
+			"108992296896196608", // fermataplays
+			"156651495884849153" // craig
+		]
+	},
+	"roleEmoteChannel": "588556612088627231", // the channel that the role assignment messages are in
+	"trackedMessages": {
+		/*
+		============== EXAMPLE FORMAT ==============
+		"tracked message ID": {
+			"role ID": ["emote ID or emoji unicode", true/false]   // (true for color roles ONLY, otherwise should be false)
+			...
+		}
+		...
+
+		Please use comments to keep things organized/easy to follow!
+		*/
+
+
+		"588832849625350167": { // Ping Roles
+			"590597468698181642": ["\uD83D\uDD8C", false], // help-with-drawing
+			"590597541599510563": ["\uD83D\uDCDD", false], // help-with-writing
+			"590597628492775434": ["\uD83D\uDDA5", false], // help-with-technical
+			"590597674902749234": ["\uD83D\uDEE0", false], // help-with-tools
+			"590597706750099476": ["\uD83D\uDCD6", false], // help-with-printing
+			"590597749867806721": ["\uD83D\uDCB5", false], // help-with-promotion
+			"590597792049659925": ["\uD83D\uDDBC", false]  // critique-request
+		},
+
+		"588873250675884052": { // Announcements Roles
+			"590603157361655835": ["\uD83D\uDDDE", false], // news
+			"590603192623038472": ["\uD83C\uDFA8", false], // challenges
+			"590603218778849334": ["\uD83D\uDDEF", false], // social-media
+			"590603275565269022": ["\u2728",	   false], // volunteers
+			"590603291985969152": ["\uD83C\uDF79", false], // events
+			"590603333665030159": ["\uD83C\uDFAE", false]  // vidja
+		},
+
+		"590597264339370024": { // Color Set Light
+			"590598682261323796": ["464369702458621975", true], // red3
+			"590598763194875934": ["464369702714736640", true], // orange3
+			"590598856404893706": ["464369702873858048", true], // yellow3
+			"590598921466675200": ["464491039130910722", true], // green3
+			"590599031038803988": ["464369702618267649", true], // blue3
+			"590599114429956152": ["464369702458621993", true], // teal3
+			"590599224115200000": ["464369702567804950", true]  // violet3
+		},
+
+		"590597310392827935": { // Color Set Bright
+			"590598618319421450": ["464369702739902464", true], // red2
+			"590598743322132500": ["464369702697959434", true], // orange2
+			"590598832111222806": ["464369702915801089", true], // yellow2
+			"590598902189916164": ["464491039189630983", true], // green2
+			"590599006263181312": ["464369702265946113", true], // blue2
+			"590599095513645078": ["464369702588645377", true], // teal2
+			"590599200975093787": ["464369702571868161", true]  // violet2
+		},
+
+		"590597324720308254": { // Color Set Dark
+			"590598521816875050": ["464369702710542336", true], // red1
+			"590598703040036869": ["464369702655754240", true], // orange1
+			"590598789434310669": ["464369702764806155", true], // yellow1
+			"590598881381711887": ["464491039491620876", true], // green1
+			"590598976806584351": ["464369702672531456", true], // blue1
+			"590599058708758529": ["464369702781714442", true], // teal1
+			"590599141655183453": ["464369702919995392", true]  // violet1
+		},
+
+		"590603015094927380": { // Pronouns
+			"590597936098836480": ["511975429964431372", false], // he
+			"590597954193195038": ["511975429897191444", false], // him
+			"590597974195961877": ["511975431239630863", false], // she
+			"590597991593803795": ["511975429624823809", false], // her
+			"590598009650151444": ["511975430106906634", false], // they
+			"590598029195870258": ["511975429972819979", false], // them
+			"590598077719642116": ["511975430102712325", false], // xe
+			"590598090755670056": ["511975430073614336", false], // xer
+			"590598117217271810": ["511975430052380698", false] // any
+		}
+	}
+
+}
