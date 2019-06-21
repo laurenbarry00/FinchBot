@@ -4,7 +4,8 @@
 	"guildId": "464369469595058176",
 	"prefix": "?",
 	"dev": {
-		"devModeEnabled": true,
+		"devModeEnabled": true, // if true, only the owner and below dev users can execute commands
+		"collectEmotesModeEnabled": false, // if true, bot will print custom emote IDs to console then shut down
 		"devUserIds": [ // co-owners, can use owner-only commands
 			"108992296896196608", // fermataplays
 			"156651495884849153" // craig

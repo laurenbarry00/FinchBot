@@ -17,6 +17,7 @@ public class Config {
     private String prefix;
     private String roleEmoteChannel;
     private boolean devModeEnabled;
+    private boolean collectEmotesModeEnabled;
 
     private ArrayList<String> devUserIds;
     private HashMap<String, ArrayList<RoleEmotePair>> trackedMessages;
@@ -79,6 +80,14 @@ public class Config {
         this.devModeEnabled = devModeEnabled;
     }
 
+    public boolean isCollectEmotesModeEnabled() {
+        return collectEmotesModeEnabled;
+    }
+
+    public void setCollectEmotesModeEnabled(boolean collectEmotesModeEnabled) {
+        this.collectEmotesModeEnabled = collectEmotesModeEnabled;
+    }
+
     public ArrayList<String> getDevUserIds() {
         return devUserIds;
     }
@@ -102,6 +111,7 @@ public class Config {
             this.prefix = root.get("prefix").getAsString();
             this.roleEmoteChannel = root.get("roleEmoteChannel").getAsString();
             this.devModeEnabled = root.getAsJsonObject("dev").get("devModeEnabled").getAsBoolean();
+            this.collectEmotesModeEnabled = root.getAsJsonObject("dev").get("collectEmotesModeEnabled").getAsBoolean();
 
             //initialize the list
             devUserIds = new ArrayList<>();

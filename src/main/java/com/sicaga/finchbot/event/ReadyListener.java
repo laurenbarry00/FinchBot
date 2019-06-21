@@ -20,8 +20,14 @@ public class ReadyListener extends ListenerAdapter {
 
         Guild sicaga = FinchBot.jda.getGuildById(FinchBot.config.getGuildId());
 
-        if (FinchBot.config.isDevModeEnabled()) {
-            System.out.println("\nEmotes:\n" + sicaga.getEmotes() + "\n");
+        if (FinchBot.config.isCollectEmotesModeEnabled()) {
+            try {
+                System.out.println("EMOTE COLLECTION MODE");
+                System.out.println("\nEmotes:\n" + sicaga.getEmotes() + "\n");
+                System.out.println("SHUTTING DOWN...");
+
+                FinchBot.jda.shutdown();
+            } catch (Exception e) { /* Don't need to do anything, just shut it down */ }
         }
 
         TextChannel channel = sicaga.getTextChannelById(FinchBot.config.getRoleEmoteChannel()); // this is the channel where the role assignment will take place
