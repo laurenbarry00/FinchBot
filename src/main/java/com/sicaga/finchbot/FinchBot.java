@@ -55,7 +55,8 @@ public class FinchBot {
                 new ShutdownCommand(waiter),
                 new RemoveReactionCommand(),
                 new ClearReactionsCommand(),
-                new PostEmoteChoicesCommand()
+                new PostEmoteChoicesCommand(),
+                new RemoveEmoteChoicesCommand()
         );
 
         jda = new JDABuilder(AccountType.BOT)
