@@ -50,6 +50,7 @@ public class FinchBot {
         client.addCommands(
                 new PingCommand(),
                 new WhoAmICommand(),
+                new SourceCommand(),
                 new ShutdownCommand(waiter),
                 new RemoveReactionCommand(),
                 new ClearReactionsCommand(),
