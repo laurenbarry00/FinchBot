@@ -48,6 +48,7 @@ public class FinchBot {
 
         // add commands to the command handler here
         client.addCommands(
+                new PingCommand(),
                 new WhoAmICommand(),
                 new ShutdownCommand(waiter),
                 new RemoveReactionCommand(),
