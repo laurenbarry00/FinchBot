@@ -41,14 +41,12 @@ public class FinchBot {
         }
 
         client.setOwnerId(config.getOwnerId());
-        client.setCoOwnerIds("108992296896196608", "156651495884849153");
         client.setCoOwnerIds(config.getDevUserIds().get(0), config.getDevUserIds().get(1));
 
 
         // Set emojis for successes, warnings, and failures
         client.setEmojis("\u2705", "\u26A0", "\u274C");
 
-        client.setPrefix("?");
         client.setPrefix(FinchBot.config.getPrefix());
 
         // add commands to the command handler here
