@@ -51,6 +51,7 @@ public class FinchBot {
 
         // add commands to the command handler here
         client.addCommands(
+                new ShutdownCommand(waiter),
                 new RemoveReactionCommand(),
                 new ClearReactionsCommand(),
                 new PostEmoteChoicesCommand()
