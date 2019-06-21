@@ -5,6 +5,7 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.sicaga.finchbot.commands.ClearReactionsCommand;
 import com.sicaga.finchbot.commands.PostEmoteChoicesCommand;
 import com.sicaga.finchbot.commands.RemoveReactionCommand;
+import com.sicaga.finchbot.commands.ShutdownCommand;
 import com.sicaga.finchbot.event.MessageReactionAddListener;
 import com.sicaga.finchbot.event.MessageReactionRemoveListener;
 import com.sicaga.finchbot.event.MessageReceivedListener;
@@ -41,6 +42,7 @@ public class FinchBot {
 
         client.setOwnerId(config.getOwnerId());
         client.setCoOwnerIds("108992296896196608", "156651495884849153");
+        client.setCoOwnerIds(config.getDevUserIds().get(0), config.getDevUserIds().get(1));
 
 
         // Set emojis for successes, warnings, and failures
