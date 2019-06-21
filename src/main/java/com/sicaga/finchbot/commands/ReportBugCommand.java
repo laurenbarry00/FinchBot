@@ -11,7 +11,7 @@ public class ReportBugCommand extends Command {
     public ReportBugCommand() {
         this.name = "reportbug";
         this.help = "Used to report a bug with FinchBot to developers";
-        this.arguments = "(description of bug here)";
+        this.arguments = "<description of bug here>";
         this.guildOnly = false;
         this.ownerCommand = false;
     }
