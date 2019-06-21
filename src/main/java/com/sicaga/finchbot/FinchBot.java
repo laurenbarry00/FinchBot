@@ -47,6 +47,7 @@ public class FinchBot {
         client.setEmojis("\u2705", "\u26A0", "\u274C");
 
         client.setPrefix("?");
+        client.setPrefix(FinchBot.config.getPrefix());
 
         // add commands to the command handler here
         client.addCommands(

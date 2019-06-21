@@ -25,10 +25,9 @@ public class PostEmoteChoicesCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        Guild sicaga = FinchBot.jda.getGuildById(464369469595058176L);
+        Guild sicaga = FinchBot.jda.getGuildById(FinchBot.config.getGuildId());
 
-        // TODO: Change channel to be loaded in via config instead of hard-coded
-        TextChannel channel = sicaga.getTextChannelById(588556612088627231L); // this is the channel where the role assignment will take place
+        TextChannel channel = sicaga.getTextChannelById(FinchBot.config.getRoleEmoteChannel()); // this is the channel where the role assignment will take place
 
         // Get all the tracked messages
         HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.config.getTrackedMessages();
