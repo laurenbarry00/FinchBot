@@ -51,6 +51,7 @@ public class FinchBot {
                 new PingCommand(),
                 new WhoAmICommand(),
                 new SourceCommand(),
+                new ReportBugCommand(),
                 new ShutdownCommand(waiter),
                 new RemoveReactionCommand(),
                 new ClearReactionsCommand(),
