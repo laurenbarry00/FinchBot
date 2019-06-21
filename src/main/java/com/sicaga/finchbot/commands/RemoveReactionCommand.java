@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
 import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 
 import java.util.List;
 
@@ -39,25 +40,34 @@ public class RemoveReactionCommand extends Command {
             User user = FinchBot.jda.getUserById(userId);
 
             try {
-                Emote emote = event.getGuild().getEmoteById(emoteName); // This will throw an exception (caught below) if it is unicode emote
+                try {
+                    Emote emote = event.getGuild().getEmoteById(emoteName); // This will throw an exception (caught below) if it is unicode emote
 
-                event.getTextChannel().removeReactionById(messageId, emote, user).queue();
-            } catch (NumberFormatException e) { // It is a unicode emoji
-                Message message = event.getTextChannel().getMessageById(messageId).complete();
-                List<MessageReaction> reactions = message.getReactions();
+                    event.getTextChannel().removeReactionById(messageId, emote, user).queue();
+                } catch (NumberFormatException e) { // It is a unicode emoji
+                    Message message = event.getTextChannel().getMessageById(messageId).complete();
+                    List<MessageReaction> reactions = message.getReactions();
 
-                for (MessageReaction reaction : reactions) { // Get all the reaction from the message, compare to the emote we're looking to delete until we find it
-                    if (reaction.getReactionEmote().getId() == null) {
-                        if (reaction.getReactionEmote().getName().equals(emoteName)) {
-                            reaction.removeReaction(user).queue();
-                        }
-                    } else {
-                        if (reaction.getReactionEmote().getId().equals(emoteName)) {
-                            reaction.removeReaction(user).queue();
+                    for (MessageReaction reaction : reactions) { // Get all the reaction from the message, compare to the emote we're looking to delete until we find it
+                        if (reaction.getReactionEmote().getId() == null) {
+                            if (reaction.getReactionEmote().getName().equals(emoteName)) {
+                                reaction.removeReaction(user).queue();
+                            }
+                        } else {
+                            if (reaction.getReactionEmote().getId().equals(emoteName)) {
+                                reaction.removeReaction(user).queue();
+                            }
                         }
                     }
                 }
+            } catch (ErrorResponseException e) { // Message not found
+                if (e.getErrorResponse().toString().equalsIgnoreCase("unknown_message")) {
+                    event.replyError(e.getMeaning() + ", are you in the correct channel?");
+                } else {
+                    event.replyError(e.getMeaning());
+                }
             }
+
         }
     }
 }

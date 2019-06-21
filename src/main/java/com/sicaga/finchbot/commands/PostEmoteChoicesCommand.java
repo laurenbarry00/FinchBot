@@ -43,8 +43,12 @@ public class PostEmoteChoicesCommand extends Command {
                 try { // Emote string is in UTF-8 format
                     message.addReaction(rep.getEmote()).complete(); // Must be .complete() as that will throw the runtimeexception (that we catch below) if it is a custom emote
                 } catch (ErrorResponseException e) { // Custom emote, need to create an Emote object and then pass it to addReaction()
-                    Emote emote = sicaga.getEmoteById(rep.getEmote());
-                    message.addReaction(emote).complete(); // This needs to be not asynchronous to make sure that the colors are added in the right order
+                    if (e.getErrorResponse().toString().equalsIgnoreCase("unknown_emoji")) {
+                        Emote emote = sicaga.getEmoteById(rep.getEmote());
+                        message.addReaction(emote).complete(); // This needs to be not asynchronous to make sure that the colors are added in the right order
+                    } else {
+                        event.replyError(e.getMeaning());
+                    }
                 }
             }
         }

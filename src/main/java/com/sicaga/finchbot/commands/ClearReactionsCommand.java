@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
 import net.dv8tion.jda.core.entities.*;
+import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 
 import java.util.List;
 
@@ -30,8 +31,16 @@ public class ClearReactionsCommand extends Command {
             // our arguments
             String messageId = items[0];
 
-            Message message = event.getTextChannel().getMessageById(messageId).complete();
-            message.clearReactions().queue();
+            try {
+                Message message = event.getTextChannel().getMessageById(messageId).complete();
+                message.clearReactions().queue();
+            } catch (ErrorResponseException e) { // Message not found
+                if (e.getErrorResponse().toString().equalsIgnoreCase("unknown_message")) {
+                    event.replyError(e.getMeaning() + ", are you in the correct channel?");
+                } else {
+                    event.replyError(e.getMeaning());
+                }
+            }
         }
     }
 }
