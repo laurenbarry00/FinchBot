@@ -4,6 +4,7 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.sicaga.finchbot.FinchBot;
+import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
 
 import java.util.concurrent.TimeUnit;
@@ -29,8 +30,20 @@ public class ShutdownCommand extends Command {
                 // Check if same author and if they typed ?confirm
                 e -> e.getAuthor().equals(event.getAuthor()) && e.getMessage().getContentRaw().equalsIgnoreCase(FinchBot.config.getPrefix().concat("confirm")),
                 // Shutdown
-                e -> FinchBot.jda.shutdownNow(),
+                e -> shutdown(event),
                 // Waiter times out after one minute
                 1, TimeUnit.MINUTES, () -> event.reply("Sorry, you took too long."));
+    }
+
+    private void shutdown(CommandEvent event) {
+        try {
+            event.reactWarning();
+            FinchBot.jda.getPresence().setPresence(OnlineStatus.OFFLINE, true);
+            Thread.sleep(50);
+            FinchBot.jda.shutdown();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            event.replyError("An error occurred while shutting down. Please wait a few moments and try again.");
+        }
     }
 }
