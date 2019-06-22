@@ -18,7 +18,7 @@ public class PingCommand extends Command {
     protected void execute(CommandEvent event) {
         CustomEmbedBuilder builder = new CustomEmbedBuilder();
         builder.setTitle("Pong!");
-        builder.addField("Ping", FinchBot.jda.getPing() + " ms.", false);
+        builder.addField("Ping", FinchBot.getJda().getPing() + " ms.", false);
 
         event.reply(builder.build());
     }

@@ -24,8 +24,8 @@ public class ReportBugCommand extends Command {
         }
 
         // Get users and set up a PM channel with each (cannot make a group pm)
-        User fermataPlays = FinchBot.jda.getUserById(108992296896196608L);
-        User ironOhki = FinchBot.jda.getUserById(222047130007764993L);
+        User fermataPlays = FinchBot.getJda().getUserById(108992296896196608L);
+        User ironOhki = FinchBot.getJda().getUserById(222047130007764993L);
         PrivateChannel fermataPlaysPm = fermataPlays.openPrivateChannel().complete();
         PrivateChannel ironOhkiPm = ironOhki.openPrivateChannel().complete();
 

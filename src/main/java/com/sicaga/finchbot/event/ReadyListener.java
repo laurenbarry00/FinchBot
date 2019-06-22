@@ -16,24 +16,24 @@ import java.util.Set;
 public class ReadyListener extends ListenerAdapter {
     @Override
     public void onReady(ReadyEvent event) {
-        FinchBot.config.loadRoleEmotePairs();
+        FinchBot.getConfig().loadRoleEmotePairs();
 
-        Guild sicaga = FinchBot.jda.getGuildById(FinchBot.config.getGuildId());
+        Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
 
-        if (FinchBot.config.isCollectEmotesModeEnabled()) {
+        if (FinchBot.getConfig().isCollectEmotesModeEnabled()) {
             try {
                 System.out.println("EMOTE COLLECTION MODE");
                 System.out.println("\nEmotes:\n" + sicaga.getEmotes() + "\n");
                 System.out.println("SHUTTING DOWN...");
 
-                FinchBot.jda.shutdown();
+                FinchBot.getJda().shutdown();
             } catch (Exception e) { /* Don't need to do anything, just shut it down */ }
         }
 
-        TextChannel channel = sicaga.getTextChannelById(FinchBot.config.getRoleEmoteChannel()); // this is the channel where the role assignment will take place
+        TextChannel channel = sicaga.getTextChannelById(FinchBot.getConfig().getRoleEmoteChannel()); // this is the channel where the role assignment will take place
 
         // Get all of the tracked messages
-        HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.config.getTrackedMessages();
+        HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.getConfig().getTrackedMessages();
         Set<String> keys = trackedMessages.keySet();
 
         // loop through all the messages that we're tracking

@@ -15,9 +15,9 @@ import java.util.Set;
 public class MessageReactionRemoveListener extends ListenerAdapter {
     @Override
     public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
-        Guild sicaga = FinchBot.jda.getGuildById(464369469595058176L);
+        Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
 
-        HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.config.getTrackedMessages();
+        HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.getConfig().getTrackedMessages();
         Set<String> keys = trackedMessages.keySet();
 
         if (keys.contains(event.getMessageId())) {

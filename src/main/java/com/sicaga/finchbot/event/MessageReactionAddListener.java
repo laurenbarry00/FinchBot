@@ -17,9 +17,9 @@ public class MessageReactionAddListener extends ListenerAdapter {
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         if (event.getReaction().isSelf()) return; // if this is from finchbot, just return
 
-        Guild sicaga = FinchBot.jda.getGuildById(464369469595058176L);
+        Guild sicaga = FinchBot.getJda().getGuildById(464369469595058176L);
 
-        HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.config.getTrackedMessages();
+        HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.getConfig().getTrackedMessages();
         Set<String> keys = trackedMessages.keySet();
         if (keys.contains(event.getMessageId())) {
             // The message is one that we're tracking

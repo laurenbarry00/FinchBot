@@ -23,7 +23,7 @@ public class WhoAmICommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         User user = event.getAuthor();
-        Guild guild = FinchBot.jda.getGuildById(FinchBot.config.getGuildId());
+        Guild guild = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
         Member userMember = guild.getMember(user);
 
         // Custom embed builder for FinchBot

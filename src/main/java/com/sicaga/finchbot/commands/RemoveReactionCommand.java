@@ -37,7 +37,7 @@ public class RemoveReactionCommand extends Command {
             String emoteName = items[1];
             String userId = items[2];
 
-            User user = FinchBot.jda.getUserById(userId);
+            User user = FinchBot.getJda().getUserById(userId);
 
             try {
                 try {

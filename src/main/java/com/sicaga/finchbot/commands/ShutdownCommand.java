@@ -24,11 +24,11 @@ public class ShutdownCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
-        event.reply("Are you sure you would like to shut down FinchBot? Type `" + FinchBot.config.getPrefix() + "confirm`.");
+        event.reply("Are you sure you would like to shut down FinchBot? Type `" + FinchBot.getConfig().getPrefix() + "confirm`.");
 
         waiter.waitForEvent(MessageReceivedEvent.class,
                 // Check if same author and if they typed ?confirm
-                e -> e.getAuthor().equals(event.getAuthor()) && e.getMessage().getContentRaw().equalsIgnoreCase(FinchBot.config.getPrefix().concat("confirm")),
+                e -> e.getAuthor().equals(event.getAuthor()) && e.getMessage().getContentRaw().equalsIgnoreCase(FinchBot.getConfig().getPrefix().concat("confirm")),
                 // Shutdown
                 e -> shutdown(event),
                 // Waiter times out after one minute
@@ -38,9 +38,9 @@ public class ShutdownCommand extends Command {
     private void shutdown(CommandEvent event) {
         try {
             event.reactWarning();
-            FinchBot.jda.getPresence().setPresence(OnlineStatus.OFFLINE, true);
+            FinchBot.getJda().getPresence().setPresence(OnlineStatus.OFFLINE, true);
             Thread.sleep(50);
-            FinchBot.jda.shutdown();
+            FinchBot.getJda().shutdown();
         } catch (InterruptedException e) {
             e.printStackTrace();
             event.replyError("An error occurred while shutting down. Please wait a few moments and try again.");

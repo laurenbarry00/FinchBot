@@ -33,17 +33,17 @@ public class RemoveEmoteChoicesCommand extends Command {
         }
 
         // Return if message ID provided isn't a tracked message
-        if (!FinchBot.config.getTrackedMessages().containsKey(args[0])) {
+        if (!FinchBot.getConfig().getTrackedMessages().containsKey(args[0])) {
             event.replyWarning("Invalid message ID, is it a tracked message?");
             return;
         }
 
-        TextChannel channel = FinchBot.jda.getTextChannelById(FinchBot.config.getRoleEmoteChannel());
+        TextChannel channel = FinchBot.getJda().getTextChannelById(FinchBot.getConfig().getRoleEmoteChannel());
         Message message = channel.getMessageById(args[0]).complete();
         List<MessageReaction> messageReactions = message.getReactions();
 
         for (MessageReaction messageReaction : messageReactions) {
-            messageReaction.removeReaction(FinchBot.jda.getSelfUser()).complete();
+            messageReaction.removeReaction(FinchBot.getJda().getSelfUser()).complete();
         }
     }
 }

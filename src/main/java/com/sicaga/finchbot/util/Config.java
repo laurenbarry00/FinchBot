@@ -156,7 +156,7 @@ public class Config {
                     JsonArray ar = message.get(roleKey).getAsJsonArray();
 
                     // Get a role object from the role ID in the json
-                    Role role = FinchBot.jda.getGuildById(464369469595058176L).getRoleById(roleKey);
+                    Role role = FinchBot.getJda().getGuildById(464369469595058176L).getRoleById(roleKey);
 
                     // this is either the unicode or emote id
                     String emote = ar.get(0).getAsString();

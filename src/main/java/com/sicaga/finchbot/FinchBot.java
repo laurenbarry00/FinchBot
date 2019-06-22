@@ -18,8 +18,8 @@ import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 
 public class FinchBot {
-    public static JDA jda;
-    public static Config config;
+    private static JDA jda;
+    private static Config config;
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException {
         // config holds token, owner id, and dev options
@@ -79,4 +79,13 @@ public class FinchBot {
                 // start it up!
                 .build();
     }
+
+    public static JDA getJda() {
+        return jda;
+    }
+
+    public static Config getConfig() {
+        return config;
+    }
+
 }
