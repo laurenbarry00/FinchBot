@@ -13,6 +13,8 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.OnlineStatus;
 import net.dv8tion.jda.core.entities.Game;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 public class FinchBot {
     private static JDA jda;
     private static Config config;
+    private static final Logger log = LoggerFactory.getLogger(FinchBot.class);
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException {
         // config holds token, owner id, and dev options
@@ -88,4 +91,7 @@ public class FinchBot {
         return config;
     }
 
+    public static Logger getLogger() {
+        return log;
+    }
 }

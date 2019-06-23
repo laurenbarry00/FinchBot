@@ -52,5 +52,6 @@ public class PostEmoteChoicesCommand extends Command {
                 }
             }
         }
+        FinchBot.getLogger().info("COMMAND PostEmoteChoices by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
     }
 }

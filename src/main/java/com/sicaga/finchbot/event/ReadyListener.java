@@ -22,11 +22,12 @@ public class ReadyListener extends ListenerAdapter {
 
         if (FinchBot.getConfig().isCollectEmotesModeEnabled()) {
             try {
-                System.out.println("EMOTE COLLECTION MODE");
-                System.out.println("\nEmotes:\n" + sicaga.getEmotes() + "\n");
-                System.out.println("SHUTTING DOWN...");
+                FinchBot.getLogger().info("EMOTE COLLECTION MODE");
+                FinchBot.getLogger().info("\nEmotes:\n" + sicaga.getEmotes() + "\n");
+                FinchBot.getLogger().info("SHUTTING DOWN...");
 
                 FinchBot.getJda().shutdown();
+                return;
             } catch (Exception e) { /* Don't need to do anything, just shut it down */ }
         }
 

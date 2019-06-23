@@ -34,6 +34,7 @@ public class ClearReactionsCommand extends Command {
             try {
                 Message message = event.getTextChannel().getMessageById(messageId).complete();
                 message.clearReactions().queue();
+                FinchBot.getLogger().info("COMMAND ClearReactions on message: " + messageId + " by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
             } catch (ErrorResponseException e) { // Message not found
                 if (e.getErrorResponse().toString().equalsIgnoreCase("unknown_message")) {
                     event.replyError(e.getMeaning() + ", are you in the correct channel?");

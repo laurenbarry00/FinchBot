@@ -32,13 +32,14 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
                         Role role = pair.getRole();
                         GuildController gc = new GuildController(sicaga);
                         gc.removeSingleRoleFromMember(event.getMember(), role).complete(); // Remove the role
+                        FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ event.getMember().getNickname());
                     }
                 } else {
                     if (event.getReactionEmote().getId().equals(pair.getEmote()) && !pair.isShouldRemoveEmoteAferAdding()) {
                         Role role = pair.getRole();
                         GuildController gc = new GuildController(sicaga);
                         gc.removeSingleRoleFromMember(event.getMember(), role).complete(); // Remove the role
-
+                        FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ event.getMember().getNickname());
                     }
                 }
             }

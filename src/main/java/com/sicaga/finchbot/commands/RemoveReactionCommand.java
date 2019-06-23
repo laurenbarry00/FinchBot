@@ -44,7 +44,8 @@ public class RemoveReactionCommand extends Command {
                     Emote emote = event.getGuild().getEmoteById(emoteName); // This will throw an exception (caught below) if it is unicode emote
 
                     event.getTextChannel().removeReactionById(messageId, emote, user).queue();
-                } catch (NumberFormatException e) { // It is a unicode emoji
+                    FinchBot.getLogger().info("COMMAND RemoveReaction (reaction: " + emote.getId() + ") on message: " + messageId + " by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
+            } catch (NumberFormatException e) { // It is a unicode emoji
                     Message message = event.getTextChannel().getMessageById(messageId).complete();
                     List<MessageReaction> reactions = message.getReactions();
 
@@ -52,10 +53,12 @@ public class RemoveReactionCommand extends Command {
                         if (reaction.getReactionEmote().getId() == null) {
                             if (reaction.getReactionEmote().getName().equals(emoteName)) {
                                 reaction.removeReaction(user).queue();
+                                FinchBot.getLogger().info("COMMAND RemoveReaction (reaction: " + reaction.getReactionEmote().getName() + ") on message: " + messageId + " by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
                             }
                         } else {
                             if (reaction.getReactionEmote().getId().equals(emoteName)) {
                                 reaction.removeReaction(user).queue();
+                                FinchBot.getLogger().info("COMMAND RemoveReaction (reaction: " + reaction.getReactionEmote().getName() + ") on message: " + messageId + " by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
                             }
                         }
                     }
@@ -67,7 +70,6 @@ public class RemoveReactionCommand extends Command {
                     event.replyError(e.getMeaning());
                 }
             }
-
         }
     }
 }

@@ -37,5 +37,8 @@ public class ReportBugCommand extends Command {
         fermataPlaysPm.sendMessage(builder.build()).queue();
         ironOhkiPm.sendMessage(builder.build()).queue();
         event.reactSuccess();
+
+        FinchBot.getLogger().info("COMMAND ReportBug by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
+        FinchBot.getLogger().info("COMMAND ReportBug Report Contents: " + event.getArgs());
     }
 }
