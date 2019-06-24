@@ -17,7 +17,7 @@ public class RoadmapCommand extends Command {
     @Override
     protected void execute(CommandEvent event) {
         CustomEmbedBuilder builder = new CustomEmbedBuilder();
-        builder.addField("FinchBot Roadmap", "", false);
+        builder.addField("FinchBot Roadmap", "https://github.com/laurenbarry00/FinchBot#roadmap", false);
 
         event.reply(builder.build());
     }
