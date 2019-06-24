@@ -17,7 +17,7 @@ public class MessageReactionAddListener extends ListenerAdapter {
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         if (event.getReaction().isSelf()) return; // if this is from finchbot, just return
 
-        Guild sicaga = FinchBot.getJda().getGuildById(464369469595058176L);
+        Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
 
         HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.getConfig().getTrackedMessages();
         Set<String> keys = trackedMessages.keySet();
@@ -31,6 +31,7 @@ public class MessageReactionAddListener extends ListenerAdapter {
                         Role role = pair.getRole();
                         GuildController gc = new GuildController(sicaga);
                         gc.addRolesToMember(event.getMember(), role).complete(); // Add the role to the user
+                        FinchBot.getLogger().debug("Role " + role.getName() + " added to member: "+ event.getMember().getNickname());
 
                         // Don't need to test if we should remove the reaction afterwards, that only applies to custom emotes (color roles)
                     }
@@ -57,6 +58,7 @@ public class MessageReactionAddListener extends ListenerAdapter {
                         }
                         // Add the new color role
                         gc.addSingleRoleToMember(event.getMember(), newRole).queue(); // Add the new role
+                        FinchBot.getLogger().debug("Role " + newRole.getName() + " added to member: "+ event.getMember().getNickname());
                     }
                 }
             }

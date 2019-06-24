@@ -103,15 +103,23 @@ public class Config {
 
             // Parse the json from file and create a JsonObject of the whole thing
             JsonObject root = (JsonObject) parser.parse(new FileReader("config.json"));
+            FinchBot.getLogger().info("Parsing file config.json.");
 
             // Get token, owner ID, and dev mode status
             this.token = root.get("token").getAsString();
+            FinchBot.getLogger().debug("Loaded token from file.");
             this.ownerId = root.get("ownerId").getAsString();
+            FinchBot.getLogger().debug("Loaded owner ID from file.");
             this.guildId = root.get("guildId").getAsString();
+            FinchBot.getLogger().debug("Loaded guild ID from file.");
             this.prefix = root.get("prefix").getAsString();
+            FinchBot.getLogger().debug("Loaded prefix from file.");
             this.roleEmoteChannel = root.get("roleEmoteChannel").getAsString();
+            FinchBot.getLogger().debug("Loaded role emote channel from file.");
             this.devModeEnabled = root.getAsJsonObject("dev").get("devModeEnabled").getAsBoolean();
+            FinchBot.getLogger().debug("Loaded dev mode status from file.");
             this.collectEmotesModeEnabled = root.getAsJsonObject("dev").get("collectEmotesModeEnabled").getAsBoolean();
+            FinchBot.getLogger().debug("Loaded emote collection mode status from file.");
 
             //initialize the list
             devUserIds = new ArrayList<>();
@@ -120,6 +128,7 @@ public class Config {
             // Loop through json array and add the ids to our outward-facing ArrayList of dev user ids.
             for (int i = 0; i < jsonDevIds.size(); i++) {
                 devUserIds.add(jsonDevIds.get(i).getAsString());
+                FinchBot.getLogger().debug("Loaded dev user ID " + jsonDevIds.get(i).getAsString());
             }
 
         } catch (IOException e) {
@@ -134,6 +143,7 @@ public class Config {
 
             // Parse the json from file and create a JsonObject of the whole thing
             JsonObject root = (JsonObject) parser.parse(new FileReader("config.json"));
+            FinchBot.getLogger().info("Parsing file config.json.");
 
             // initialize and populate the list of tracked message IDs
             trackedMessages = new HashMap<>();
@@ -156,7 +166,7 @@ public class Config {
                     JsonArray ar = message.get(roleKey).getAsJsonArray();
 
                     // Get a role object from the role ID in the json
-                    Role role = FinchBot.getJda().getGuildById(464369469595058176L).getRoleById(roleKey);
+                    Role role = FinchBot.getJda().getGuildById(guildId).getRoleById(roleKey);
 
                     // this is either the unicode or emote id
                     String emote = ar.get(0).getAsString();
@@ -167,6 +177,7 @@ public class Config {
 
                     // create the RoleEmotePair and add it to the list
                     RoleEmotePair rep = new RoleEmotePair(emote, role, shouldRemoveAfterAdding);
+                    FinchBot.getLogger().info("Loaded role: " + role.getName() + ", emote: " + emote + ", shouldRemoveAfterAdding: " + shouldRemoveAfterAdding);
                     reps.add(rep);
                 }
                 // Add the message and REP list to our hashmap

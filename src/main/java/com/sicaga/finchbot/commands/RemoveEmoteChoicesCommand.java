@@ -45,5 +45,6 @@ public class RemoveEmoteChoicesCommand extends Command {
         for (MessageReaction messageReaction : messageReactions) {
             messageReaction.removeReaction(FinchBot.getJda().getSelfUser()).complete();
         }
+        FinchBot.getLogger().info("COMMAND RemoveEmoteChoices by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
     }
 }

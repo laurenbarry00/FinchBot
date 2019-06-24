@@ -45,5 +45,6 @@ public class ShutdownCommand extends Command {
             e.printStackTrace();
             event.replyError("An error occurred while shutting down. Please wait a few moments and try again.");
         }
+        FinchBot.getLogger().info("COMMAND Shutdown by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
     }
 }
