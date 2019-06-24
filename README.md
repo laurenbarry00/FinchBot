@@ -14,7 +14,12 @@ For more information about Sicaga (Seattle Independent Comic and Game Aritsts), 
 	*or*
 	- Non-Exclusive (users can have as many or as little as they choose), such as announcement subscriptions
 - Compatible with built-in Unicode emojis, or custom user-uploaded emotes.
-- `?ping` and `?whoami` commands.
+- Commands:
+	- `!ping`: Provides information about FinchBot's latency.
+	- `!whoami`: Provides information about the user, including their roles.
+	- `!reportbug <description>`: Reports a bug with FinchBot to developers.
+	- `!source`: Links to FinchBot's GitHub repository.
+	- `!roadmap`: Links to FinchBot's roadmap of planned features.
 
 ### Technologies Used
 - [JDA (Java Discord API)](https://github.com/DV8FromTheWorld/JDA)
