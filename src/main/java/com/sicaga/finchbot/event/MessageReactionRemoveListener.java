@@ -15,6 +15,9 @@ import java.util.Set;
 public class MessageReactionRemoveListener extends ListenerAdapter {
     @Override
     public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
+        if (event.getReaction().isSelf()) {
+            return;
+        }
         Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
 
         HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.getConfig().getTrackedMessages();
@@ -27,20 +30,12 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
                 if (pair.isShouldRemoveEmoteAferAdding()) {
                     return;
                 }
-                if (event.getReactionEmote().getId() == null) {
-                    if (event.getReactionEmote().getName().equals(pair.getEmote()) && !pair.isShouldRemoveEmoteAferAdding()) {
-                        Role role = pair.getRole();
-                        GuildController gc = new GuildController(sicaga);
-                        gc.removeSingleRoleFromMember(event.getMember(), role).complete(); // Remove the role
-                        FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ event.getMember().getNickname());
-                    }
-                } else {
-                    if (event.getReactionEmote().getId().equals(pair.getEmote()) && !pair.isShouldRemoveEmoteAferAdding()) {
-                        Role role = pair.getRole();
-                        GuildController gc = new GuildController(sicaga);
-                        gc.removeSingleRoleFromMember(event.getMember(), role).complete(); // Remove the role
-                        FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ event.getMember().getNickname());
-                    }
+                // If the reaction matches a role emote pair, remove the role associated
+                if (event.getReactionEmote().getName().equalsIgnoreCase(pair.getEmote())) {
+                    Role role = pair.getRole();
+                    GuildController gc = new GuildController(sicaga);
+                    gc.removeSingleRoleFromMember(event.getMember(), role).complete(); // Remove the role
+                    FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ event.getMember().getNickname());
                 }
             }
         }

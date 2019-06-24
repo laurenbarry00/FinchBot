@@ -4,14 +4,12 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
 import com.sicaga.finchbot.util.RoleEmotePair;
-import net.dv8tion.jda.core.entities.Emote;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.exceptions.ErrorResponseException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 
 public class PostEmoteChoicesCommand extends Command {
@@ -37,17 +35,25 @@ public class PostEmoteChoicesCommand extends Command {
         for (String messageId : keys) {
             Message message = channel.getMessageById(messageId).complete();
 
-            ArrayList<RoleEmotePair> reps = trackedMessages.get(messageId);
+            List<MessageReaction> emotes = message.getReactions();
 
+            ArrayList<RoleEmotePair> reps = trackedMessages.get(messageId);
             for (RoleEmotePair rep : reps) {
-                try { // Emote string is in UTF-8 format
-                    message.addReaction(rep.getEmote()).complete(); // Must be .complete() as that will throw the runtimeexception (that we catch below) if it is a custom emote
-                } catch (ErrorResponseException e) { // Custom emote, need to create an Emote object and then pass it to addReaction()
-                    if (e.getErrorResponse().toString().equalsIgnoreCase("unknown_emoji")) {
-                        Emote emote = sicaga.getEmoteById(rep.getEmote());
-                        message.addReaction(emote).complete(); // This needs to be not asynchronous to make sure that the colors are added in the right order
-                    } else {
-                        event.replyError(e.getMeaning());
+                // Color, just add it (so it's in order)
+                if (rep.isShouldRemoveEmoteAferAdding()) {
+                    List<Emote> emoteList = sicaga.getEmotesByName(rep.getEmote(), true);
+                    message.addReaction(emoteList.get(0)).queue();
+                } else {
+                    // Compare the reactions already on the message to our role emote pairs and add
+                    for (MessageReaction mr : emotes) {
+                        MessageReaction.ReactionEmote e = mr.getReactionEmote();
+                        if (e.getName().equalsIgnoreCase(rep.getEmote())) {
+                            if (e.isEmote()) {
+                                message.addReaction(e.getEmote()).complete();
+                            } else {
+                                message.addReaction(e.getName()).complete();
+                            }
+                        }
                     }
                 }
             }
