@@ -18,7 +18,6 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
         if (event.getReaction().isSelf()) {
             return;
         }
-        Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
 
         HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.getConfig().getTrackedMessages();
         Set<String> keys = trackedMessages.keySet();
@@ -33,6 +32,11 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
                 // If the reaction matches a role emote pair, remove the role associated
                 if (event.getReactionEmote().getName().equalsIgnoreCase(pair.getEmote())) {
                     Role role = pair.getRole();
+                    Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
+                    /*
+                    Sicaga needs to be defined here to prevent this error:
+                    https://github.com/DV8FromTheWorld/JDA/wiki/19)-Troubleshooting#cannot-get-reference-as-it-has-already-been-garbage-collected
+                     */
                     GuildController gc = new GuildController(sicaga);
                     gc.removeSingleRoleFromMember(event.getMember(), role).complete(); // Remove the role
                     FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ event.getMember().getNickname());

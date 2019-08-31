@@ -17,8 +17,6 @@ public class MessageReactionAddListener extends ListenerAdapter {
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         if (event.getReaction().isSelf()) return; // if this is from finchbot, just return
 
-        Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
-
         HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.getConfig().getTrackedMessages();
         Set<String> keys = trackedMessages.keySet();
         if (keys.contains(event.getMessageId())) {
@@ -27,7 +25,6 @@ public class MessageReactionAddListener extends ListenerAdapter {
             for (RoleEmotePair pair : reps) {
                 if (event.getReactionEmote().getName().equalsIgnoreCase(pair.getEmote())) {
                     Role role = pair.getRole();
-                    GuildController gc = new GuildController(sicaga);
 
                     // It's a color role emote pair
                     if (pair.isShouldRemoveEmoteAferAdding()) {
@@ -45,10 +42,23 @@ public class MessageReactionAddListener extends ListenerAdapter {
                                 }
                             }
                             // Remove all the color roles that aren't the new color
+                            /*
+                            Sicaga needs to be defined inside this scope to prevent this error:
+                            https://github.com/DV8FromTheWorld/JDA/wiki/19)-Troubleshooting#cannot-get-reference-as-it-has-already-been-garbage-collected
+                             */
+                            Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
+                            GuildController gc = new GuildController(sicaga);
                             gc.removeRolesFromMember(event.getMember(), rolesToRemove).complete();
                             // This needs to be .complete() because all the other colors need to be removed before we add the new one
                         }
                     }
+
+                    /*
+                    Sicaga is declared redundantly in this scope in order to prevent this error:
+                    https://github.com/DV8FromTheWorld/JDA/wiki/19)-Troubleshooting#cannot-get-reference-as-it-has-already-been-garbage-collected
+                     */
+                    Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
+                    GuildController gc = new GuildController(sicaga);
                     gc.addSingleRoleToMember(event.getMember(), role).complete(); // Add the role to the user
                     FinchBot.getLogger().debug("Role " + role.getName() + " added to member: "+ event.getMember().getNickname());
                     return;

@@ -47,8 +47,12 @@ public class ReadyListener extends ListenerAdapter {
             for (RoleEmotePair rep : reps) {
                 // Color, just add it (so it's in order)
                 if (rep.isShouldRemoveEmoteAferAdding()) {
-                    List<Emote> emoteList = sicaga.getEmotesByName(rep.getEmote(), true);
-                    message.addReaction(emoteList.get(0)).queue();
+                    try {
+                        List<Emote> emoteList = sicaga.getEmotesByName(rep.getEmote(), true);
+                        message.addReaction(emoteList.get(0)).queue();
+                    } catch (IndexOutOfBoundsException e) {
+                        FinchBot.getLogger().debug("Color emote " + rep.getEmote() + " already added to message " + messageId);
+                    }
                 } else {
                     // Compare the reactions already on the message to our role emote pairs and add
                     // This is necessary because otherwise the bot will double-up on emotes
