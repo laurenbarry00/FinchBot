@@ -2,11 +2,11 @@ package com.sicaga.finchbot.event;
 
 import com.sicaga.finchbot.FinchBot;
 import com.sicaga.finchbot.util.RoleEmotePair;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.events.message.react.MessageReactionRemoveEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.core.managers.GuildController;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.managers.GuildManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,12 +33,12 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
                 if (event.getReactionEmote().getName().equalsIgnoreCase(pair.getEmote())) {
                     Role role = pair.getRole();
                     Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
+                    assert sicaga != null;
                     /*
                     Sicaga needs to be defined here to prevent this error:
                     https://github.com/DV8FromTheWorld/JDA/wiki/19)-Troubleshooting#cannot-get-reference-as-it-has-already-been-garbage-collected
                      */
-                    GuildController gc = new GuildController(sicaga);
-                    gc.removeSingleRoleFromMember(event.getMember(), role).complete(); // Remove the role
+                    sicaga.removeRoleFromMember(event.getMember(), role).complete(); // Remove the role
                     FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ event.getMember().getNickname());
                 }
             }

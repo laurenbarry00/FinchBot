@@ -1,11 +1,11 @@
-package com.sicaga.finchbot.commands;
+package com.sicaga.finchbot.commands.util;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
 import com.sicaga.finchbot.util.CustomEmbedBuilder;
-import net.dv8tion.jda.core.entities.PrivateChannel;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.User;
 
 public class ReportBugCommand extends Command {
     public ReportBugCommand() {

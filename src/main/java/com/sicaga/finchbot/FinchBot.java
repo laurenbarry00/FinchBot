@@ -2,22 +2,24 @@ package com.sicaga.finchbot;
 
 import com.jagrosh.jdautilities.command.CommandClientBuilder;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
-import com.sicaga.finchbot.commands.*;
+import com.sicaga.finchbot.commands.roleemote.ClearReactionsCommand;
+import com.sicaga.finchbot.commands.roleemote.PostEmoteChoicesCommand;
+import com.sicaga.finchbot.commands.roleemote.RemoveEmoteChoicesCommand;
+import com.sicaga.finchbot.commands.roleemote.RemoveReactionCommand;
+import com.sicaga.finchbot.commands.util.*;
 import com.sicaga.finchbot.event.MessageReactionAddListener;
-import com.sicaga.finchbot.event.MessageReactionRemoveListener;
 import com.sicaga.finchbot.event.MessageReceivedListener;
 import com.sicaga.finchbot.event.ReadyListener;
 import com.sicaga.finchbot.util.Config;
-import net.dv8tion.jda.core.AccountType;
-import net.dv8tion.jda.core.JDA;
-import net.dv8tion.jda.core.JDABuilder;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.entities.Game;
+import net.dv8tion.jda.api.AccountType;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.entities.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
-import java.util.ArrayList;
 
 public class FinchBot {
     private static JDA jda;
@@ -35,7 +37,7 @@ public class FinchBot {
 
         // default playing message is "Type <prefix>help"
         if (config.isDevModeEnabled()) {
-            client.setGame(Game.playing("Running in Dev Mode"));
+            client.setActivity(Activity.playing("Running in Dev Mode"));
         } else {
             client.useDefaultGame();
         }
@@ -68,17 +70,15 @@ public class FinchBot {
 
                 // set temporary status while bot is loading
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
-                .setGame(Game.playing("Loading..."))
+                .setActivity(Activity.playing("Loading..."))
 
                 // add the command and waiter event
-                .addEventListener(waiter)
-                .addEventListener(client.build())
+                .addEventListeners(waiter, client.build())
 
                 // add our own event listeners
-                .addEventListener(new ReadyListener())
-                .addEventListener(new MessageReactionAddListener())
-                .addEventListener(new MessageReactionRemoveListener())
-                .addEventListener(new MessageReceivedListener())
+                .addEventListeners(new ReadyListener(),
+                        new MessageReactionAddListener(),
+                        new MessageReceivedListener())
 
                 // start it up!
                 .build();

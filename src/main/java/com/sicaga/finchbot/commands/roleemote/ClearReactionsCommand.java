@@ -1,10 +1,10 @@
-package com.sicaga.finchbot.commands;
+package com.sicaga.finchbot.commands.roleemote;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
-import net.dv8tion.jda.core.entities.*;
-import net.dv8tion.jda.core.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class ClearReactionsCommand extends Command {
             String messageId = items[0];
 
             try {
-                Message message = event.getTextChannel().getMessageById(messageId).complete();
+                Message message = event.getTextChannel().retrieveMessageById(messageId).complete();
                 message.clearReactions().queue();
                 FinchBot.getLogger().info("COMMAND ClearReactions on message: " + messageId + " by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
             } catch (ErrorResponseException e) { // Message not found

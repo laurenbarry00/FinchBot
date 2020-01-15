@@ -1,12 +1,12 @@
-package com.sicaga.finchbot.commands;
+package com.sicaga.finchbot.commands.roleemote;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
 import com.sicaga.finchbot.util.RoleEmotePair;
-import net.dv8tion.jda.core.entities.Message;
-import net.dv8tion.jda.core.entities.MessageReaction;
-import net.dv8tion.jda.core.entities.TextChannel;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +44,7 @@ public class RemoveEmoteChoicesCommand extends Command {
             Set<String> keys = trackedMessages.keySet();
             // Loop through all tracked messages
             for (String messageId : keys) {
-                Message message = channel.getMessageById(messageId).complete();
+                Message message = channel.retrieveMessageById(messageId).complete();
                 List<MessageReaction> emotes = message.getReactions();
                 // Remove all FinchBot's reactions from the message
                 for (MessageReaction mr: emotes) {
@@ -62,7 +62,7 @@ public class RemoveEmoteChoicesCommand extends Command {
         }
 
         // Remove the emote choices from a specific message
-        Message message = channel.getMessageById(args[0]).complete();
+        Message message = channel.retrieveMessageById(args[0]).complete();
         List<MessageReaction> messageReactions = message.getReactions();
 
         for (MessageReaction messageReaction : messageReactions) {

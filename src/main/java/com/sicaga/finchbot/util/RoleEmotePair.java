@@ -1,6 +1,6 @@
 package com.sicaga.finchbot.util;
 
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.api.entities.Role;
 
 public class RoleEmotePair {
     private String emote;

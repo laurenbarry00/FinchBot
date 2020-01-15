@@ -1,11 +1,11 @@
-package com.sicaga.finchbot.commands;
+package com.sicaga.finchbot.commands.util;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.sicaga.finchbot.FinchBot;
-import net.dv8tion.jda.core.OnlineStatus;
-import net.dv8tion.jda.core.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.OnlineStatus;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.util.concurrent.TimeUnit;
 

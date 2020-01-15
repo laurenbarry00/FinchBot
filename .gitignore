@@ -29,8 +29,12 @@ whitelist.json
 
 # IDEA  ignored folders
 .idea/artifacts/
+.idea/libraries/
 .idea/
 target/
+
+# IDEA project file
+*.iml
 
 # META-INF
 src/main/java/META-INF/

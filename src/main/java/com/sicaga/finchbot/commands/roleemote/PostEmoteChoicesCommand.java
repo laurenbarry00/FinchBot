@@ -1,11 +1,11 @@
-package com.sicaga.finchbot.commands;
+package com.sicaga.finchbot.commands.roleemote;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
+import com.sicaga.finchbot.event.ReadyListener;
 import com.sicaga.finchbot.util.RoleEmotePair;
-import net.dv8tion.jda.core.entities.*;
-import net.dv8tion.jda.core.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.entities.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +33,7 @@ public class PostEmoteChoicesCommand extends Command {
 
         // loop through all the messages that we're tracking
         for (String messageId : keys) {
-            Message message = channel.getMessageById(messageId).complete();
+            Message message = channel.retrieveMessageById(messageId).complete();
 
             List<MessageReaction> emotes = message.getReactions();
 
@@ -45,16 +45,7 @@ public class PostEmoteChoicesCommand extends Command {
                     message.addReaction(emoteList.get(0)).queue();
                 } else {
                     // Compare the reactions already on the message to our role emote pairs and add
-                    for (MessageReaction mr : emotes) {
-                        MessageReaction.ReactionEmote e = mr.getReactionEmote();
-                        if (e.getName().equalsIgnoreCase(rep.getEmote())) {
-                            if (e.isEmote()) {
-                                message.addReaction(e.getEmote()).complete();
-                            } else {
-                                message.addReaction(e.getName()).complete();
-                            }
-                        }
-                    }
+                    ReadyListener.addRoleEmotesToMessage(message, emotes, rep);
                 }
             }
         }

@@ -2,11 +2,11 @@ package com.sicaga.finchbot.event;
 
 import com.sicaga.finchbot.FinchBot;
 import com.sicaga.finchbot.util.RoleEmotePair;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.events.message.react.MessageReactionAddEvent;
-import net.dv8tion.jda.core.hooks.ListenerAdapter;
-import net.dv8tion.jda.core.managers.GuildController;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.managers.GuildManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,41 +25,32 @@ public class MessageReactionAddListener extends ListenerAdapter {
             for (RoleEmotePair pair : reps) {
                 if (event.getReactionEmote().getName().equalsIgnoreCase(pair.getEmote())) {
                     Role role = pair.getRole();
+                    /*
+                    Sicaga needs to be defined inside this scope to prevent this error:
+                    https://github.com/DV8FromTheWorld/JDA/wiki/19)-Troubleshooting#cannot-get-reference-as-it-has-already-been-garbage-collected
+                    */
+                    Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
+
 
                     // It's a color role emote pair
                     if (pair.isShouldRemoveEmoteAferAdding()) {
                         // Remove the reaction that the user put
                         event.getReaction().removeReaction(event.getUser()).queue();
 
-                        // Remove all the other color roles
+                        // Remove all the color roles that aren't the new color
                         for (String message : keys) {
                             ArrayList<RoleEmotePair> pairs = trackedMessages.get(message);
 
-                            ArrayList<Role> rolesToRemove = new ArrayList<>();
                             for (RoleEmotePair rep : pairs) {
                                 if (rep.isShouldRemoveEmoteAferAdding() && rep.getRole() != role) {
-                                    rolesToRemove.add(rep.getRole());
+                                    // This needs to be .complete() because all the other colors need to be removed before we add the new one
+                                    sicaga.removeRoleFromMember(event.getMember(), rep.getRole()).complete();
                                 }
                             }
-                            // Remove all the color roles that aren't the new color
-                            /*
-                            Sicaga needs to be defined inside this scope to prevent this error:
-                            https://github.com/DV8FromTheWorld/JDA/wiki/19)-Troubleshooting#cannot-get-reference-as-it-has-already-been-garbage-collected
-                             */
-                            Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
-                            GuildController gc = new GuildController(sicaga);
-                            gc.removeRolesFromMember(event.getMember(), rolesToRemove).complete();
-                            // This needs to be .complete() because all the other colors need to be removed before we add the new one
                         }
                     }
 
-                    /*
-                    Sicaga is declared redundantly in this scope in order to prevent this error:
-                    https://github.com/DV8FromTheWorld/JDA/wiki/19)-Troubleshooting#cannot-get-reference-as-it-has-already-been-garbage-collected
-                     */
-                    Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
-                    GuildController gc = new GuildController(sicaga);
-                    gc.addSingleRoleToMember(event.getMember(), role).complete(); // Add the role to the user
+                    sicaga.addRoleToMember(event.getMember(), role).complete(); // Add the role to the user
                     FinchBot.getLogger().debug("Role " + role.getName() + " added to member: "+ event.getMember().getNickname());
                     return;
                 }

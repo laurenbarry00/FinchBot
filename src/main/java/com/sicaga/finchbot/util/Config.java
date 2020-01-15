@@ -2,7 +2,7 @@ package com.sicaga.finchbot.util;
 
 import com.google.gson.*;
 import com.sicaga.finchbot.FinchBot;
-import net.dv8tion.jda.core.entities.Role;
+import net.dv8tion.jda.api.entities.Role;
 
 import java.io.FileReader;
 import java.io.IOException;

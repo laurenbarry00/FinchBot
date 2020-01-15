@@ -1,10 +1,9 @@
-package com.sicaga.finchbot.commands;
+package com.sicaga.finchbot.commands.roleemote;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
-import net.dv8tion.jda.core.entities.*;
-import net.dv8tion.jda.core.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.entities.*;
 
 import java.util.List;
 
@@ -40,7 +39,7 @@ public class RemoveReactionCommand extends Command {
             User user = FinchBot.getJda().getUserById(userId);
 
             TextChannel channel = event.getTextChannel();
-            Message message = channel.getMessageById(messageId).complete();
+            Message message = channel.retrieveMessageById(messageId).complete();
             List<MessageReaction> mrList = message.getReactions();
 
             for (MessageReaction mr : mrList) {

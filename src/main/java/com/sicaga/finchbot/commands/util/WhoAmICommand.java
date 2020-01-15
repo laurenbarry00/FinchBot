@@ -1,13 +1,13 @@
-package com.sicaga.finchbot.commands;
+package com.sicaga.finchbot.commands.util;
 
 import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
 import com.sicaga.finchbot.util.CustomEmbedBuilder;
-import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.entities.Member;
-import net.dv8tion.jda.core.entities.Role;
-import net.dv8tion.jda.core.entities.User;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 
 import java.time.format.DateTimeFormatter;
 
@@ -47,7 +47,7 @@ public class WhoAmICommand extends Command {
         builder.addField("Roles", rolesString.toString(), false);
 
         // Add date when member first joined the discord, format: DAY, DD MMMM YYYY HH:MM:SS GMT
-        builder.addField("Discord Member Since:", userMember.getJoinDate().format(DateTimeFormatter.RFC_1123_DATE_TIME), false);
+        builder.addField("Discord Member Since:", userMember.getTimeJoined().format(DateTimeFormatter.RFC_1123_DATE_TIME), false);
 
         event.reply(builder.build());
     }
