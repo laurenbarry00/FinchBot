@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.sicaga.finchbot.FinchBot;
 import net.dv8tion.jda.api.entities.Role;
 
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -131,8 +132,9 @@ public class Config {
                 FinchBot.getLogger().debug("Loaded dev user ID " + jsonDevIds.get(i).getAsString());
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            FinchBot.getLogger().error("Could not load config file! Aborting bot initialization.");
+            System.exit(-1);
         }
     }
 
