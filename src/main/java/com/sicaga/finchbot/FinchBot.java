@@ -8,6 +8,7 @@ import com.sicaga.finchbot.commands.roleemote.RemoveEmoteChoicesCommand;
 import com.sicaga.finchbot.commands.roleemote.RemoveReactionCommand;
 import com.sicaga.finchbot.commands.util.*;
 import com.sicaga.finchbot.event.MessageReactionAddListener;
+import com.sicaga.finchbot.event.MessageReactionRemoveListener;
 import com.sicaga.finchbot.event.MessageReceivedListener;
 import com.sicaga.finchbot.event.ReadyListener;
 import com.sicaga.finchbot.util.Config;
@@ -78,6 +79,7 @@ public class FinchBot {
                 // add our own event listeners
                 .addEventListeners(new ReadyListener(),
                         new MessageReactionAddListener(),
+                        new MessageReactionRemoveListener(),
                         new MessageReceivedListener())
 
                 // start it up!

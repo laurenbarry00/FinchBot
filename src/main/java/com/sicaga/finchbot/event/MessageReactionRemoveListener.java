@@ -3,10 +3,10 @@ package com.sicaga.finchbot.event;
 import com.sicaga.finchbot.FinchBot;
 import com.sicaga.finchbot.util.RoleEmotePair;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.managers.GuildManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -25,21 +25,30 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
         if (keys.contains(event.getMessageId())) {
             // The message is one that we're tracking
             ArrayList<RoleEmotePair> reps = trackedMessages.get(event.getMessageId());
+
             for (RoleEmotePair pair : reps) {
+                // ignore if it's a color role
                 if (pair.isShouldRemoveEmoteAferAdding()) {
                     return;
                 }
+
+                // this is the name of the emote that the user clicked
+                String emoteName = event.getReactionEmote().getName();
+
+                // this is the user that we're removing the role from
+                Member user = event.getMember();
+
                 // If the reaction matches a role emote pair, remove the role associated
-                if (event.getReactionEmote().getName().equalsIgnoreCase(pair.getEmote())) {
+                if (emoteName.equalsIgnoreCase(pair.getEmote())) {
                     Role role = pair.getRole();
                     Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
-                    assert sicaga != null;
                     /*
                     Sicaga needs to be defined here to prevent this error:
                     https://github.com/DV8FromTheWorld/JDA/wiki/19)-Troubleshooting#cannot-get-reference-as-it-has-already-been-garbage-collected
                      */
-                    sicaga.removeRoleFromMember(event.getMember(), role).complete(); // Remove the role
-                    FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ event.getMember().getNickname());
+
+                    sicaga.removeRoleFromMember(user, role).queue(); // Remove the role
+                    FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ user.getEffectiveName());
                 }
             }
         }
