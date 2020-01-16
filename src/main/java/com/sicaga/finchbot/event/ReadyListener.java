@@ -30,6 +30,9 @@ public class ReadyListener extends ListenerAdapter {
                 FinchBot.getJda().shutdown();
                 return;
             } catch (Exception e) { /* Don't need to do anything, just shut it down */ }
+        } else if (FinchBot.getConfig().shouldSkipRoleEmoteInit()) {
+            FinchBot.getLogger().info("Skipping role emote pair initialization (adding emotes to tracked messages)...");
+            return;
         }
 
         TextChannel channel = sicaga.getTextChannelById(FinchBot.getConfig().getRoleEmoteChannel()); // this is the channel where the role assignment will take place

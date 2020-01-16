@@ -19,6 +19,7 @@ public class Config {
     private String roleEmoteChannel;
     private boolean devModeEnabled;
     private boolean collectEmotesModeEnabled;
+    private boolean shouldSkipRoleEmoteInit;
 
     private ArrayList<String> devUserIds;
     private HashMap<String, ArrayList<RoleEmotePair>> trackedMessages;
@@ -31,6 +32,7 @@ public class Config {
         this.roleEmoteChannel = null;
         this.devModeEnabled = false;
         this.devUserIds = null;
+        this.shouldSkipRoleEmoteInit = false;
     }
 
     public String getToken() {
@@ -97,6 +99,10 @@ public class Config {
         return trackedMessages;
     }
 
+    public boolean shouldSkipRoleEmoteInit() {
+        return this.shouldSkipRoleEmoteInit;
+    }
+
     public void load() {
         try {
             // For reading in the raw JSON from file
@@ -109,16 +115,25 @@ public class Config {
             // Get token, owner ID, and dev mode status
             this.token = root.get("token").getAsString();
             FinchBot.getLogger().debug("Loaded token from file.");
+
             this.ownerId = root.get("ownerId").getAsString();
             FinchBot.getLogger().debug("Loaded owner ID from file.");
+
             this.guildId = root.get("guildId").getAsString();
             FinchBot.getLogger().debug("Loaded guild ID from file.");
+
             this.prefix = root.get("prefix").getAsString();
             FinchBot.getLogger().debug("Loaded prefix from file.");
+
             this.roleEmoteChannel = root.get("roleEmoteChannel").getAsString();
             FinchBot.getLogger().debug("Loaded role emote channel from file.");
+
+            this.shouldSkipRoleEmoteInit = root.get("shouldSkipRoleEmoteInit").getAsBoolean();
+            FinchBot.getLogger().debug("Loaded shouldSkipRoleEmoteInit status from file.");
+
             this.devModeEnabled = root.getAsJsonObject("dev").get("devModeEnabled").getAsBoolean();
             FinchBot.getLogger().debug("Loaded dev mode status from file.");
+
             this.collectEmotesModeEnabled = root.getAsJsonObject("dev").get("collectEmotesModeEnabled").getAsBoolean();
             FinchBot.getLogger().debug("Loaded emote collection mode status from file.");
 
@@ -185,8 +200,8 @@ public class Config {
                 // Add the message and REP list to our hashmap
                 trackedMessages.put(key, reps);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (FileNotFoundException e) {
+            FinchBot.getLogger().error("Could not load config file! Role-Emote Pair functionality will not work!");
         }
     }
 }
