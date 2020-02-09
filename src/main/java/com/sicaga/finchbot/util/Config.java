@@ -4,9 +4,9 @@ import com.google.gson.*;
 import com.sicaga.finchbot.FinchBot;
 import net.dv8tion.jda.api.entities.Role;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -24,6 +24,8 @@ public class Config {
 
     private ArrayList<String> devUserIds;
     private HashMap<String, ArrayList<RoleEmotePair>> trackedMessages;
+    private JsonObject socialMediaWhitelist;
+    private ArrayList<String> socialTemplates;
 
     public Config() {
         this.token = null;
@@ -38,6 +40,8 @@ public class Config {
 
         this.devUserIds = new ArrayList<>();
         this.trackedMessages = new HashMap<>();
+        this.socialMediaWhitelist = null;
+        this.socialTemplates = new ArrayList<>();
     }
 
     public String getToken() {
@@ -106,6 +110,14 @@ public class Config {
 
     public boolean shouldSkipRoleEmoteInit() {
         return this.shouldSkipRoleEmoteInit;
+    }
+
+    public JsonObject getSocialMediaWhitelist() {
+        return this.socialMediaWhitelist;
+    }
+
+    public ArrayList<String> getSocialTemplates() {
+        return this.socialTemplates;
     }
 
     public void load() {
@@ -208,5 +220,60 @@ public class Config {
         } catch (FileNotFoundException e) {
             FinchBot.getLogger().error("Could not load config file! Role-Emote Pair functionality will not work!");
         }
+    }
+
+    public void loadSocialMedia() {
+        try {
+            // get the social media whitelist and the users' comic details from remote json
+            // getting the json from airtable
+            URL whitelistUrl = new URL("http://138.68.253.109/sicagacomics/index.json");
+            FinchBot.getLogger().debug("Downloading social media whitelist from " + whitelistUrl.toString());
+
+            socialMediaWhitelist = retrieveJsonFromUrl(whitelistUrl);
+            if (socialMediaWhitelist.size() > 0) {
+                FinchBot.getLogger().debug("Successfully loaded social media whitelist from file.");
+            }
+
+            // get the post templates from file and populate the list of templates
+            // getting the json from airtable
+            URL templatesUrl = new URL("http://138.68.253.109/tweetstrings/index.json");
+            FinchBot.getLogger().debug("Downloading social media templates from " + templatesUrl.toString());
+
+            // read templates
+            JsonObject root = retrieveJsonFromUrl(templatesUrl);
+            JsonArray templatesArray = root.get("Tweet Strings").getAsJsonArray();
+
+            for (JsonElement templateElement : templatesArray) {
+                String template = templateElement.getAsJsonObject().get("tweetString").getAsString();
+                socialTemplates.add(template);
+                FinchBot.getLogger().debug("Social media post template added: " + template);
+            }
+
+            if (socialTemplates.size() > 0) {
+                FinchBot.getLogger().debug("Successfully loaded social media templates from file.");
+            }
+
+        } catch (MalformedURLException e) {
+            FinchBot.getLogger().error("URL to social media posts/templates invalid. Social media functions will not work correctly!");
+        }
+    }
+
+    private JsonObject retrieveJsonFromUrl(URL url) {
+        JsonParser parser = new JsonParser();
+        StringBuilder sb = new StringBuilder();
+        try {
+            // read JSON from url as raw string
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1) {
+                sb.append(chars, 0, read);
+            }
+        } catch (IOException e) {
+            FinchBot.getLogger().error("Error occurred while reading JSON from URL. Social media functions will not work correctly!");
+        }
+
+        // parse raw string JSON to JsonObject
+        return (JsonObject) parser.parse(sb.toString());
     }
 }

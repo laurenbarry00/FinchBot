@@ -15,11 +15,15 @@ import java.util.Set;
 
 
 public class ReadyListener extends ListenerAdapter {
+
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         // get the role-emote pairs from the config file
         // this needs to be executed onReady as opposed to otherwise because we need to retrieve guild-specific information as we do this
         FinchBot.getConfig().loadRoleEmotePairs();
+
+        // load the social media posting whitelist from file
+        FinchBot.getConfig().loadSocialMedia();
 
         Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
         assert sicaga != null;

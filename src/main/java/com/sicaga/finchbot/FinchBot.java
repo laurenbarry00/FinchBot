@@ -6,12 +6,16 @@ import com.sicaga.finchbot.commands.roleemote.ClearReactionsCommand;
 import com.sicaga.finchbot.commands.roleemote.PostEmoteChoicesCommand;
 import com.sicaga.finchbot.commands.roleemote.RemoveEmoteChoicesCommand;
 import com.sicaga.finchbot.commands.roleemote.RemoveReactionCommand;
+import com.sicaga.finchbot.commands.social.PostCommand;
+import com.sicaga.finchbot.commands.social.UpdateCommand;
 import com.sicaga.finchbot.commands.util.*;
 import com.sicaga.finchbot.event.MessageReactionAddListener;
 import com.sicaga.finchbot.event.MessageReactionRemoveListener;
 import com.sicaga.finchbot.event.MessageReceivedListener;
 import com.sicaga.finchbot.event.ReadyListener;
 import com.sicaga.finchbot.util.Config;
+import com.sicaga.finchbot.util.SocialMediaPostSession;
+import com.sicaga.finchbot.util.SocialMediaPostSession;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -21,12 +25,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
 
 public class FinchBot {
     private static JDA jda;
     private static Config config;
     private static final Logger log = LoggerFactory.getLogger(FinchBot.class);
     private static final EventWaiter waiter = new EventWaiter();
+
+    private static ArrayList<SocialMediaPostSession> activeSocialMediaSessions = new ArrayList<>();
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException {
         // config holds token, owner id, and dev options
@@ -63,6 +70,8 @@ public class FinchBot {
                 new ClearReactionsCommand(),
                 new PostEmoteChoicesCommand(),
                 new RemoveEmoteChoicesCommand(),
+                new UpdateCommand(),
+                new PostCommand(waiter)
         );
 
         jda = new JDABuilder(AccountType.BOT)
@@ -102,4 +111,17 @@ public class FinchBot {
         return waiter;
     }
 
+    public static ArrayList<SocialMediaPostSession> getActiveSocialMediaSessions() {
+        return activeSocialMediaSessions;
+    }
+
+    public static void removeSocialMediaSession(SocialMediaPostSession session) {
+        activeSocialMediaSessions.remove(session);
+    }
+
+    public static void addSocialMediaSession(SocialMediaPostSession session) {
+        if (!activeSocialMediaSessions.contains(session)) {
+            activeSocialMediaSessions.add(session);
+        }
+    }
 }
