@@ -26,14 +26,13 @@ public class FinchBot {
     private static JDA jda;
     private static Config config;
     private static final Logger log = LoggerFactory.getLogger(FinchBot.class);
+    private static final EventWaiter waiter = new EventWaiter();
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException {
         // config holds token, owner id, and dev options
         config = new Config();
         config.load();
 
-        // setting up an eventwaiter and the command client
-        EventWaiter waiter = new EventWaiter();
         CommandClientBuilder client = new CommandClientBuilder();
 
         // default playing message is "Type <prefix>help"
@@ -59,17 +58,18 @@ public class FinchBot {
                 new SourceCommand(),
                 new RoadmapCommand(),
                 new ReportBugCommand(),
-                new ShutdownCommand(waiter),
+                new ShutdownCommand(),
                 new RemoveReactionCommand(),
                 new ClearReactionsCommand(),
                 new PostEmoteChoicesCommand(),
-                new RemoveEmoteChoicesCommand()
+                new RemoveEmoteChoicesCommand(),
         );
 
         jda = new JDABuilder(AccountType.BOT)
                 .setToken(config.getToken())
 
                 // set temporary status while bot is loading
+                // this is set to online upon ReadyEvent
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
                 .setActivity(Activity.playing("Loading..."))
 
@@ -97,4 +97,9 @@ public class FinchBot {
     public static Logger getLogger() {
         return log;
     }
+
+    public static EventWaiter getWaiter() {
+        return waiter;
+    }
+
 }

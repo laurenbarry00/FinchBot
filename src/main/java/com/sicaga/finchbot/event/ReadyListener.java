@@ -1,6 +1,7 @@
 package com.sicaga.finchbot.event;
 
 import com.sicaga.finchbot.FinchBot;
+import com.sicaga.finchbot.commands.roleemote.PostEmoteChoicesCommand;
 import com.sicaga.finchbot.util.RoleEmotePair;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -16,6 +17,8 @@ import java.util.Set;
 public class ReadyListener extends ListenerAdapter {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
+        // get the role-emote pairs from the config file
+        // this needs to be executed onReady as opposed to otherwise because we need to retrieve guild-specific information as we do this
         FinchBot.getConfig().loadRoleEmotePairs();
 
         Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
@@ -61,20 +64,7 @@ public class ReadyListener extends ListenerAdapter {
                 } else {
                     // Compare the reactions already on the message to our role emote pairs and add
                     // This is necessary because otherwise the bot will double-up on emotes
-                    addRoleEmotesToMessage(message, emotes, rep);
-                }
-            }
-        }
-    }
-
-    public static void addRoleEmotesToMessage(Message message, List<MessageReaction> emotes, RoleEmotePair rep) {
-        for (MessageReaction mr : emotes) {
-            MessageReaction.ReactionEmote e = mr.getReactionEmote();
-            if (e.getName().equalsIgnoreCase(rep.getEmote())) {
-                if (e.isEmote()) {
-                    message.addReaction(e.getEmote()).complete();
-                } else {
-                    message.addReaction(e.getName()).complete();
+                    PostEmoteChoicesCommand.addRoleEmotesToMessage(message, emotes, rep);
                 }
             }
         }

@@ -47,7 +47,8 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
                     https://github.com/DV8FromTheWorld/JDA/wiki/19)-Troubleshooting#cannot-get-reference-as-it-has-already-been-garbage-collected
                      */
 
-                    sicaga.removeRoleFromMember(user, role).queue(); // Remove the role
+                    // Remove the role
+                    sicaga.removeRoleFromMember(user, role).queue();
                     FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ user.getEffectiveName());
                 }
             }

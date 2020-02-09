@@ -17,6 +17,7 @@ public class Config {
     private String guildId;
     private String prefix;
     private String roleEmoteChannel;
+
     private boolean devModeEnabled;
     private boolean collectEmotesModeEnabled;
     private boolean shouldSkipRoleEmoteInit;
@@ -30,9 +31,13 @@ public class Config {
         this.guildId = null;
         this.prefix = null;
         this.roleEmoteChannel = null;
+
         this.devModeEnabled = false;
-        this.devUserIds = null;
         this.shouldSkipRoleEmoteInit = false;
+        this.collectEmotesModeEnabled = false;
+
+        this.devUserIds = new ArrayList<>();
+        this.trackedMessages = new HashMap<>();
     }
 
     public String getToken() {
@@ -114,28 +119,28 @@ public class Config {
 
             // Get token, owner ID, and dev mode status
             this.token = root.get("token").getAsString();
-            FinchBot.getLogger().debug("Loaded token from file.");
+            FinchBot.getLogger().debug("Successfully loaded token from file.");
 
             this.ownerId = root.get("ownerId").getAsString();
-            FinchBot.getLogger().debug("Loaded owner ID from file.");
+            FinchBot.getLogger().debug("Successfully loaded owner ID from file.");
 
             this.guildId = root.get("guildId").getAsString();
-            FinchBot.getLogger().debug("Loaded guild ID from file.");
+            FinchBot.getLogger().debug("Successfully loaded guild ID from file.");
 
             this.prefix = root.get("prefix").getAsString();
-            FinchBot.getLogger().debug("Loaded prefix from file.");
+            FinchBot.getLogger().debug("Successfully loaded prefix from file.");
 
             this.roleEmoteChannel = root.get("roleEmoteChannel").getAsString();
-            FinchBot.getLogger().debug("Loaded role emote channel from file.");
+            FinchBot.getLogger().debug("Successfully loaded role emote channel from file.");
 
             this.shouldSkipRoleEmoteInit = root.get("shouldSkipRoleEmoteInit").getAsBoolean();
-            FinchBot.getLogger().debug("Loaded shouldSkipRoleEmoteInit status from file.");
+            FinchBot.getLogger().debug("Successfully loaded shouldSkipRoleEmoteInit status from file.");
 
             this.devModeEnabled = root.getAsJsonObject("dev").get("devModeEnabled").getAsBoolean();
-            FinchBot.getLogger().debug("Loaded dev mode status from file.");
+            FinchBot.getLogger().debug("Successfully loaded dev mode status from file.");
 
             this.collectEmotesModeEnabled = root.getAsJsonObject("dev").get("collectEmotesModeEnabled").getAsBoolean();
-            FinchBot.getLogger().debug("Loaded emote collection mode status from file.");
+            FinchBot.getLogger().debug("Successfully loaded emote collection mode status from file.");
 
             //initialize the list
             devUserIds = new ArrayList<>();
@@ -144,7 +149,7 @@ public class Config {
             // Loop through json array and add the ids to our outward-facing ArrayList of dev user ids.
             for (int i = 0; i < jsonDevIds.size(); i++) {
                 devUserIds.add(jsonDevIds.get(i).getAsString());
-                FinchBot.getLogger().debug("Loaded dev user ID " + jsonDevIds.get(i).getAsString());
+                FinchBot.getLogger().debug("Successfully loaded dev user ID " + jsonDevIds.get(i).getAsString());
             }
 
         } catch (FileNotFoundException e) {
