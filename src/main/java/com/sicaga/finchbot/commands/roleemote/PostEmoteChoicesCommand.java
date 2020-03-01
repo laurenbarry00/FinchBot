@@ -19,6 +19,7 @@ public class PostEmoteChoicesCommand extends Command {
         this.arguments = "";
         this.guildOnly = true;
         this.ownerCommand = true;
+        this.category = new Category("Bot Dev");
     }
 
     @Override

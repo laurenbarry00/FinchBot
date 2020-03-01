@@ -18,6 +18,7 @@ public class ShutdownCommand extends Command {
         this.arguments = "";
         this.guildOnly = false;
         this.ownerCommand = true;
+        this.category = new Category("Bot Dev");
 
         this.waiter = FinchBot.getWaiter();
     }

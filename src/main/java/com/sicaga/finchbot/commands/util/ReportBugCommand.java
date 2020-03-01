@@ -13,7 +13,7 @@ public class ReportBugCommand extends Command {
         this.arguments = "<description of bug here>";
         this.guildOnly = false;
         this.ownerCommand = false;
-        this.category = new Category("");
+        this.category = new Category("General");
     }
 
     @Override

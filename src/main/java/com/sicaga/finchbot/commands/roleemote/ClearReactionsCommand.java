@@ -15,6 +15,7 @@ public class ClearReactionsCommand extends Command {
         this.arguments = "<message id>";
         this.guildOnly = false;
         this.ownerCommand = true;
+        this.category = new Category("Bot Dev");
     }
 
     @Override

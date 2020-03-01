@@ -18,6 +18,7 @@ public class WhoAmICommand extends Command {
         this.arguments = "";
         this.guildOnly = true;
         this.ownerCommand = false;
+        this.category = new Category("General");
     }
 
     @Override
