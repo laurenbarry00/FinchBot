@@ -25,7 +25,7 @@ public class PostCommand extends Command {
         this.arguments = "";
         this.guildOnly = false;
         this.ownerCommand = false;
-        this.cooldown = 5; // TODO: 10 minutes cooldown
+        this.cooldown = 600;
         this.cooldownScope = CooldownScope.GLOBAL;
         this.category = new Category("Social Media");
 
