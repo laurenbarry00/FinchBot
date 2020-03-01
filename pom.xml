@@ -30,8 +30,6 @@
                               <mainClass>com.sicaga.finchbot.FinchBot</mainClass>
                           </manifest>
                       </archive>
-                      <source>11</source>
-                      <target>11</target>
                       <appendAssemblyId>false</appendAssemblyId>
                   </configuration>
                   <executions>
