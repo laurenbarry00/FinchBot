@@ -15,6 +15,7 @@ public class ClearReactionsCommand extends Command {
         this.arguments = "<message id>";
         this.guildOnly = false;
         this.ownerCommand = true;
+        this.category = new Category("Bot Dev");
     }
 
     @Override
@@ -28,15 +29,18 @@ public class ClearReactionsCommand extends Command {
                 return;
             }
 
-            // our arguments
+            // get message id from arguments
             String messageId = items[0];
 
             try {
+                // get the message that we're removing the reactions from
+                // this must be in the same channel as where the command was executed
                 Message message = event.getTextChannel().retrieveMessageById(messageId).complete();
+
                 message.clearReactions().queue();
                 FinchBot.getLogger().info("COMMAND ClearReactions on message: " + messageId + " by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
-            } catch (ErrorResponseException e) { // Message not found
-                if (e.getErrorResponse().toString().equalsIgnoreCase("unknown_message")) {
+            } catch (ErrorResponseException e) {
+                if (e.getErrorResponse().toString().equalsIgnoreCase("unknown_message")) { // Message not found
                     event.replyError(e.getMeaning() + ", are you in the correct channel?");
                 } else {
                     event.replyError(e.getMeaning());

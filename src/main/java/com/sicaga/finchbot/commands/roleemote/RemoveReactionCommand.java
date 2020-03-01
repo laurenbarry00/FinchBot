@@ -14,6 +14,7 @@ public class RemoveReactionCommand extends Command {
         this.arguments = "<message id> <emote name> <user id>";
         this.guildOnly = false;
         this.ownerCommand = true;
+        this.category = new Category("Bot Dev");
     }
 
     @Override

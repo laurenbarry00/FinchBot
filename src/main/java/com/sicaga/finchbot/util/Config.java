@@ -4,9 +4,9 @@ import com.google.gson.*;
 import com.sicaga.finchbot.FinchBot;
 import net.dv8tion.jda.api.entities.Role;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -17,12 +17,15 @@ public class Config {
     private String guildId;
     private String prefix;
     private String roleEmoteChannel;
+
     private boolean devModeEnabled;
     private boolean collectEmotesModeEnabled;
     private boolean shouldSkipRoleEmoteInit;
 
     private ArrayList<String> devUserIds;
     private HashMap<String, ArrayList<RoleEmotePair>> trackedMessages;
+    private JsonObject socialMediaWhitelist;
+    private ArrayList<String> socialTemplates;
 
     public Config() {
         this.token = null;
@@ -30,9 +33,15 @@ public class Config {
         this.guildId = null;
         this.prefix = null;
         this.roleEmoteChannel = null;
+
         this.devModeEnabled = false;
-        this.devUserIds = null;
         this.shouldSkipRoleEmoteInit = false;
+        this.collectEmotesModeEnabled = false;
+
+        this.devUserIds = new ArrayList<>();
+        this.trackedMessages = new HashMap<>();
+        this.socialMediaWhitelist = null;
+        this.socialTemplates = new ArrayList<>();
     }
 
     public String getToken() {
@@ -103,6 +112,14 @@ public class Config {
         return this.shouldSkipRoleEmoteInit;
     }
 
+    public JsonObject getSocialMediaWhitelist() {
+        return this.socialMediaWhitelist;
+    }
+
+    public ArrayList<String> getSocialTemplates() {
+        return this.socialTemplates;
+    }
+
     public void load() {
         try {
             // For reading in the raw JSON from file
@@ -114,28 +131,28 @@ public class Config {
 
             // Get token, owner ID, and dev mode status
             this.token = root.get("token").getAsString();
-            FinchBot.getLogger().debug("Loaded token from file.");
+            FinchBot.getLogger().debug("Successfully loaded token from file.");
 
             this.ownerId = root.get("ownerId").getAsString();
-            FinchBot.getLogger().debug("Loaded owner ID from file.");
+            FinchBot.getLogger().debug("Successfully loaded owner ID from file.");
 
             this.guildId = root.get("guildId").getAsString();
-            FinchBot.getLogger().debug("Loaded guild ID from file.");
+            FinchBot.getLogger().debug("Successfully loaded guild ID from file.");
 
             this.prefix = root.get("prefix").getAsString();
-            FinchBot.getLogger().debug("Loaded prefix from file.");
+            FinchBot.getLogger().debug("Successfully loaded prefix from file.");
 
             this.roleEmoteChannel = root.get("roleEmoteChannel").getAsString();
-            FinchBot.getLogger().debug("Loaded role emote channel from file.");
+            FinchBot.getLogger().debug("Successfully loaded role emote channel from file.");
 
             this.shouldSkipRoleEmoteInit = root.get("shouldSkipRoleEmoteInit").getAsBoolean();
-            FinchBot.getLogger().debug("Loaded shouldSkipRoleEmoteInit status from file.");
+            FinchBot.getLogger().debug("Successfully loaded shouldSkipRoleEmoteInit status from file.");
 
             this.devModeEnabled = root.getAsJsonObject("dev").get("devModeEnabled").getAsBoolean();
-            FinchBot.getLogger().debug("Loaded dev mode status from file.");
+            FinchBot.getLogger().debug("Successfully loaded dev mode status from file.");
 
             this.collectEmotesModeEnabled = root.getAsJsonObject("dev").get("collectEmotesModeEnabled").getAsBoolean();
-            FinchBot.getLogger().debug("Loaded emote collection mode status from file.");
+            FinchBot.getLogger().debug("Successfully loaded emote collection mode status from file.");
 
             //initialize the list
             devUserIds = new ArrayList<>();
@@ -144,7 +161,7 @@ public class Config {
             // Loop through json array and add the ids to our outward-facing ArrayList of dev user ids.
             for (int i = 0; i < jsonDevIds.size(); i++) {
                 devUserIds.add(jsonDevIds.get(i).getAsString());
-                FinchBot.getLogger().debug("Loaded dev user ID " + jsonDevIds.get(i).getAsString());
+                FinchBot.getLogger().debug("Successfully loaded dev user ID " + jsonDevIds.get(i).getAsString());
             }
 
         } catch (FileNotFoundException e) {
@@ -203,5 +220,60 @@ public class Config {
         } catch (FileNotFoundException e) {
             FinchBot.getLogger().error("Could not load config file! Role-Emote Pair functionality will not work!");
         }
+    }
+
+    public void loadSocialMedia() {
+        try {
+            // get the social media whitelist and the users' comic details from remote json
+            // getting the json from airtable
+            URL whitelistUrl = new URL("http://138.68.253.109/sicagacomics/index.json");
+            FinchBot.getLogger().debug("Downloading social media whitelist from " + whitelistUrl.toString());
+
+            socialMediaWhitelist = retrieveJsonFromUrl(whitelistUrl);
+            if (socialMediaWhitelist.size() > 0) {
+                FinchBot.getLogger().debug("Successfully loaded social media whitelist from file.");
+            }
+
+            // get the post templates from file and populate the list of templates
+            // getting the json from airtable
+            URL templatesUrl = new URL("http://138.68.253.109/tweetstrings/index.json");
+            FinchBot.getLogger().debug("Downloading social media templates from " + templatesUrl.toString());
+
+            // read templates
+            JsonObject root = retrieveJsonFromUrl(templatesUrl);
+            JsonArray templatesArray = root.get("Tweet Strings").getAsJsonArray();
+
+            for (JsonElement templateElement : templatesArray) {
+                String template = templateElement.getAsJsonObject().get("tweetString").getAsString();
+                socialTemplates.add(template);
+                FinchBot.getLogger().debug("Social media post template added: " + template);
+            }
+
+            if (socialTemplates.size() > 0) {
+                FinchBot.getLogger().debug("Successfully loaded social media templates from file.");
+            }
+
+        } catch (MalformedURLException e) {
+            FinchBot.getLogger().error("URL to social media posts/templates invalid. Social media functions will not work correctly!");
+        }
+    }
+
+    private JsonObject retrieveJsonFromUrl(URL url) {
+        JsonParser parser = new JsonParser();
+        StringBuilder sb = new StringBuilder();
+        try {
+            // read JSON from url as raw string
+            BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
+            int read;
+            char[] chars = new char[1024];
+            while ((read = reader.read(chars)) != -1) {
+                sb.append(chars, 0, read);
+            }
+        } catch (IOException e) {
+            FinchBot.getLogger().error("Error occurred while reading JSON from URL. Social media functions will not work correctly!");
+        }
+
+        // parse raw string JSON to JsonObject
+        return (JsonObject) parser.parse(sb.toString());
     }
 }

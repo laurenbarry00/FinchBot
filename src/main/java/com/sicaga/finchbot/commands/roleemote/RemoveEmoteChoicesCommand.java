@@ -20,6 +20,7 @@ public class RemoveEmoteChoicesCommand extends Command {
         this.arguments = "<message ID>";
         this.guildOnly = true;
         this.ownerCommand = true;
+        this.category = new Category("Bot Dev");
     }
 
     @Override

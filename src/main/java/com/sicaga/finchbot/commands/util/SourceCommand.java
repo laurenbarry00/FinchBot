@@ -11,6 +11,7 @@ public class SourceCommand extends Command {
         this.arguments = "";
         this.guildOnly = false;
         this.ownerCommand = false;
+        this.category = new Category("General");
     }
 
     @Override

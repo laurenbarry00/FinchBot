@@ -18,6 +18,7 @@ public class WhoAmICommand extends Command {
         this.arguments = "";
         this.guildOnly = true;
         this.ownerCommand = false;
+        this.category = new Category("General");
     }
 
     @Override
@@ -30,12 +31,8 @@ public class WhoAmICommand extends Command {
         CustomEmbedBuilder builder = new CustomEmbedBuilder();
         builder.setImage(user.getAvatarUrl());
 
-        // Add their nickname and/or their user ID & discriminator
-        if (userMember.getNickname() != null) {
-            builder.addField("Name", userMember.getNickname() + " (" + user.getName() + "#" + user.getDiscriminator() + ")", false);
-        } else {
-            builder.addField("Name", user.getName() + "#" + user.getDiscriminator(), false);
-        }
+        // Add their nickname
+        builder.addField("Name", userMember.getEffectiveName() + " (" + user.getName() + "#" + user.getDiscriminator() + ")", false);
 
         // Concat all the role names as bullet points and add
         StringBuilder rolesString = new StringBuilder();
