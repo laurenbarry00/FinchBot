@@ -15,7 +15,6 @@ import com.sicaga.finchbot.event.MessageReceivedListener;
 import com.sicaga.finchbot.event.ReadyListener;
 import com.sicaga.finchbot.util.Config;
 import com.sicaga.finchbot.util.SocialMediaPostSession;
-import com.sicaga.finchbot.util.SocialMediaPostSession;
 import net.dv8tion.jda.api.AccountType;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -30,12 +29,19 @@ import java.util.ArrayList;
 public class FinchBot {
     private static JDA jda;
     private static Config config;
+
     private static final Logger log = LoggerFactory.getLogger(FinchBot.class);
+
     private static final EventWaiter waiter = new EventWaiter();
 
     private static ArrayList<SocialMediaPostSession> activeSocialMediaSessions = new ArrayList<>();
 
     public static void main(String[] args) throws LoginException, IllegalArgumentException {
+        log.info("==================================================");
+        log.info("=                 Sicaga FinchBot                =");
+        log.info("==================================================");
+
+
         // config holds token, owner id, and dev options
         config = new Config();
         config.load();
@@ -44,36 +50,49 @@ public class FinchBot {
 
         // default playing message is "Type <prefix>help"
         if (config.isDevModeEnabled()) {
+            log.info("FinchBot initialized in development mode.");
             client.setActivity(Activity.playing("Running in Dev Mode"));
         } else {
             client.useDefaultGame();
         }
 
         client.setOwnerId(config.getOwnerId());
+        log.info("Owner ID set to: " + config.getOwnerId());
+
         client.setCoOwnerIds(config.getDevUserIds().get(0), config.getDevUserIds().get(1));
+        log.info("Co-Owner IDs set.");
 
 
         // Set emojis for successes, warnings, and failures
         client.setEmojis("\u2705", "\u26A0", "\u274C");
 
         client.setPrefix(FinchBot.config.getPrefix());
+        log.info("Command Prefix set to: " + config.getPrefix());
 
-        // add commands to the command handler here
+        // Add commands to the command handler
+        // General Commands
         client.addCommands(
                 new PingCommand(),
-                new WhoAmICommand(),
-                new SourceCommand(),
-                new RoadmapCommand(),
                 new ReportBugCommand(),
+                new RoadmapCommand(),
+                new SourceCommand(),
+                new WhoAmICommand()
+        );
+        // Bot Dev
+        client.addCommands(
                 new ShutdownCommand(),
-                new RemoveReactionCommand(),
                 new ClearReactionsCommand(),
                 new PostEmoteChoicesCommand(),
                 new RemoveEmoteChoicesCommand(),
-                new UpdateCommand(),
-                new PostCommand(waiter)
+                new RemoveReactionCommand()
+        );
+        // Social Media
+        client.addCommands(
+                new PostCommand(waiter),
+                new UpdateCommand()
         );
 
+        log.info("Initializing JDA bot client.");
         jda = new JDABuilder(AccountType.BOT)
                 .setToken(config.getToken())
 
@@ -101,10 +120,6 @@ public class FinchBot {
 
     public static Config getConfig() {
         return config;
-    }
-
-    public static Logger getLogger() {
-        return log;
     }
 
     public static EventWaiter getWaiter() {

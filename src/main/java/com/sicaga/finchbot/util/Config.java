@@ -3,6 +3,8 @@ package com.sicaga.finchbot.util;
 import com.google.gson.*;
 import com.sicaga.finchbot.FinchBot;
 import net.dv8tion.jda.api.entities.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -27,6 +29,8 @@ public class Config {
     private JsonObject socialMediaWhitelist;
     private ArrayList<String> socialTemplates;
 
+    private Logger log = LoggerFactory.getLogger(Config.class);
+
     public Config() {
         this.token = null;
         this.ownerId = null;
@@ -48,56 +52,28 @@ public class Config {
         return token;
     }
 
-    public void setToken(String token) {
-        this.token = token;
-    }
-
     public String getOwnerId() {
         return ownerId;
-    }
-
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
     }
 
     public String getGuildId() {
         return guildId;
     }
 
-    public void setGuildId(String guildId) {
-        this.guildId = guildId;
-    }
-
     public String getPrefix() {
         return prefix;
-    }
-
-    public void setPrefix(String prefix) {
-        this.prefix = prefix;
     }
 
     public String getRoleEmoteChannel() {
         return roleEmoteChannel;
     }
 
-    public void setRoleEmoteChannel(String roleEmoteChannel) {
-        this.roleEmoteChannel = roleEmoteChannel;
-    }
-
     public boolean isDevModeEnabled() {
         return devModeEnabled;
     }
 
-    public void setDevModeEnabled(boolean devModeEnabled) {
-        this.devModeEnabled = devModeEnabled;
-    }
-
     public boolean isCollectEmotesModeEnabled() {
         return collectEmotesModeEnabled;
-    }
-
-    public void setCollectEmotesModeEnabled(boolean collectEmotesModeEnabled) {
-        this.collectEmotesModeEnabled = collectEmotesModeEnabled;
     }
 
     public ArrayList<String> getDevUserIds() {
@@ -121,63 +97,88 @@ public class Config {
     }
 
     public void load() {
+        log.info("Loading Bot Configuration from file.");
         try {
             // For reading in the raw JSON from file
             JsonParser parser = new JsonParser();
 
+            log.info("Reading and parsing file config.json.");
             // Parse the json from file and create a JsonObject of the whole thing
             JsonObject root = (JsonObject) parser.parse(new FileReader("config.json"));
-            FinchBot.getLogger().info("Parsing file config.json.");
 
             // Get token, owner ID, and dev mode status
             this.token = root.get("token").getAsString();
-            FinchBot.getLogger().debug("Successfully loaded token from file.");
+            if (token == null) {
+                log.error("Token failed to load from file.");
+            } else {
+                log.debug("Token loaded successfully from file.");
+            }
 
             this.ownerId = root.get("ownerId").getAsString();
-            FinchBot.getLogger().debug("Successfully loaded owner ID from file.");
+            if (ownerId == null) {
+                log.error("Owner ID failed to load from file.");
+            } else {
+                log.debug("Owner ID loaded successfully from file.");
+            }
 
             this.guildId = root.get("guildId").getAsString();
-            FinchBot.getLogger().debug("Successfully loaded guild ID from file.");
+            if (guildId == null) {
+                log.error("Sicaga Guild ID failed to load from file.");
+            } else {
+                log.debug("Sicaga Guild ID loaded successfully from file.");
+            }
 
             this.prefix = root.get("prefix").getAsString();
-            FinchBot.getLogger().debug("Successfully loaded prefix from file.");
+            if (prefix == null) {
+                log.error("Command Prefix failed to load from file.");
+            } else {
+                log.debug("Command Prefix loaded successfully from file.");
+            }
 
             this.roleEmoteChannel = root.get("roleEmoteChannel").getAsString();
-            FinchBot.getLogger().debug("Successfully loaded role emote channel from file.");
+            if (roleEmoteChannel == null) {
+                log.error("Role Emote Channel failed to load from file.");
+            } else {
+                log.debug("Role Emote Channel loaded successfully from file.");
+            }
 
             this.shouldSkipRoleEmoteInit = root.get("shouldSkipRoleEmoteInit").getAsBoolean();
-            FinchBot.getLogger().debug("Successfully loaded shouldSkipRoleEmoteInit status from file.");
+            log.debug("Should Skip RoleEmote Initialization set to: " + shouldSkipRoleEmoteInit);
 
             this.devModeEnabled = root.getAsJsonObject("dev").get("devModeEnabled").getAsBoolean();
-            FinchBot.getLogger().debug("Successfully loaded dev mode status from file.");
+            log.debug("Dev Mode set to: " + devModeEnabled);
 
             this.collectEmotesModeEnabled = root.getAsJsonObject("dev").get("collectEmotesModeEnabled").getAsBoolean();
-            FinchBot.getLogger().debug("Successfully loaded emote collection mode status from file.");
+            log.debug("Emote Collection Mode set to: " + collectEmotesModeEnabled);
 
             //initialize the list
             devUserIds = new ArrayList<>();
+
             // convert list of dev user ids to a json array
             JsonArray jsonDevIds = root.getAsJsonObject("dev").get("devUserIds").getAsJsonArray();
+            log.debug("Dev User IDs successfully loaded from file.");
+
             // Loop through json array and add the ids to our outward-facing ArrayList of dev user ids.
             for (int i = 0; i < jsonDevIds.size(); i++) {
                 devUserIds.add(jsonDevIds.get(i).getAsString());
-                FinchBot.getLogger().debug("Successfully loaded dev user ID " + jsonDevIds.get(i).getAsString());
+                log.debug("Dev User ID loaded: " + jsonDevIds.get(i).getAsString());
             }
 
         } catch (FileNotFoundException e) {
-            FinchBot.getLogger().error("Could not load config file! Aborting bot initialization.");
+            log.error("Could not load config file! Aborting bot initialization.");
             System.exit(-1);
         }
     }
 
     public void loadRoleEmotePairs() {
+        log.info("Loading RoleEmote Pair Configuration from file.");
         try {
             // For reading in the raw JSON from file
             JsonParser parser = new JsonParser();
 
+            log.info("Reading and parsing file config.json.");
             // Parse the json from file and create a JsonObject of the whole thing
             JsonObject root = (JsonObject) parser.parse(new FileReader("config.json"));
-            FinchBot.getLogger().info("Parsing file config.json.");
 
             // initialize and populate the list of tracked message IDs
             trackedMessages = new HashMap<>();
@@ -211,14 +212,14 @@ public class Config {
 
                     // create the RoleEmotePair and add it to the list
                     RoleEmotePair rep = new RoleEmotePair(emote, role, shouldRemoveAfterAdding);
-                    FinchBot.getLogger().info("Loaded role: " + role.getName() + ", emote: " + emote + ", shouldRemoveAfterAdding: " + shouldRemoveAfterAdding);
+                    log.debug("Loaded role: " + role.getName() + ", emote: " + emote + ", shouldRemoveAfterAdding: " + shouldRemoveAfterAdding);
                     reps.add(rep);
                 }
                 // Add the message and REP list to our hashmap
                 trackedMessages.put(key, reps);
             }
         } catch (FileNotFoundException e) {
-            FinchBot.getLogger().error("Could not load config file! Role-Emote Pair functionality will not work!");
+            log.error("Could not load config file! Role-Emote Pair functionality will not work!");
         }
     }
 
@@ -227,40 +228,49 @@ public class Config {
             // get the social media whitelist and the users' comic details from remote json
             // getting the json from airtable
             URL whitelistUrl = new URL("http://138.68.253.109/sicagacomics/index.json");
-            FinchBot.getLogger().debug("Downloading social media whitelist from " + whitelistUrl.toString());
 
+            log.info("Downloading social media whitelist.");
             socialMediaWhitelist = retrieveJsonFromUrl(whitelistUrl);
+
             if (socialMediaWhitelist.size() > 0) {
-                FinchBot.getLogger().debug("Successfully loaded social media whitelist from file.");
+                log.debug("Social media whitelist successfully loaded from remote file.");
             }
 
             // get the post templates from file and populate the list of templates
             // getting the json from airtable
             URL templatesUrl = new URL("http://138.68.253.109/tweetstrings/index.json");
-            FinchBot.getLogger().debug("Downloading social media templates from " + templatesUrl.toString());
 
             // read templates
+            log.info("Downloading social media templates.");
             JsonObject root = retrieveJsonFromUrl(templatesUrl);
             JsonArray templatesArray = root.get("Tweet Strings").getAsJsonArray();
 
+            if (templatesArray != null) {
+                log.debug("Social media templates successfully loaded from remote file.");
+            }
+
             for (JsonElement templateElement : templatesArray) {
                 String template = templateElement.getAsJsonObject().get("tweetString").getAsString();
-                socialTemplates.add(template);
-                FinchBot.getLogger().debug("Social media post template added: " + template);
+                if (template.length() > 0) {
+                    log.debug("Social media template loaded: " + template);
+                    socialTemplates.add(template);
+                }
             }
 
             if (socialTemplates.size() > 0) {
-                FinchBot.getLogger().debug("Successfully loaded social media templates from file.");
+                log.debug("Social media templates successfully loaded from file.");
             }
 
         } catch (MalformedURLException e) {
-            FinchBot.getLogger().error("URL to social media posts/templates invalid. Social media functions will not work correctly!");
+            log.error("URL to social media posts/templates invalid. Social media functions will not work correctly!");
         }
     }
 
     private JsonObject retrieveJsonFromUrl(URL url) {
         JsonParser parser = new JsonParser();
         StringBuilder sb = new StringBuilder();
+
+        log.info("Attempting to download JSON from: " + url.toString());
         try {
             // read JSON from url as raw string
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -270,7 +280,7 @@ public class Config {
                 sb.append(chars, 0, read);
             }
         } catch (IOException e) {
-            FinchBot.getLogger().error("Error occurred while reading JSON from URL. Social media functions will not work correctly!");
+            log.error("Error occurred while reading JSON from URL. Social media functions will not work correctly!");
         }
 
         // parse raw string JSON to JsonObject
