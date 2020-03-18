@@ -7,6 +7,8 @@ import com.sicaga.finchbot.util.RoleEmotePair;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +16,9 @@ import java.util.List;
 import java.util.Set;
 
 public class RemoveEmoteChoicesCommand extends Command {
+
+    Logger log = LoggerFactory.getLogger(RemoveEmoteChoicesCommand.class);
+
     public RemoveEmoteChoicesCommand() {
         this.name = "removeemotechoices";
         this.help = "Removes the emote choices from a tracked message";
@@ -37,6 +42,8 @@ public class RemoveEmoteChoicesCommand extends Command {
             return;
         }
 
+        log.info("RemoveEmoteChoices by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
+
         TextChannel channel = FinchBot.getJda().getTextChannelById(FinchBot.getConfig().getRoleEmoteChannel());
 
         // Want to remove all of the emote choices
@@ -49,10 +56,11 @@ public class RemoveEmoteChoicesCommand extends Command {
                 List<MessageReaction> emotes = message.getReactions();
                 // Remove all FinchBot's reactions from the message
                 for (MessageReaction mr: emotes) {
+                    log.debug("Removed messagereaction " + mr.toString() + " from message " + messageId);
+
                     mr.removeReaction(FinchBot.getJda().getSelfUser()).complete();
                 }
             }
-            FinchBot.getLogger().info("COMMAND RemoveEmoteChoices by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
             return;
         }
 
@@ -67,8 +75,9 @@ public class RemoveEmoteChoicesCommand extends Command {
         List<MessageReaction> messageReactions = message.getReactions();
 
         for (MessageReaction messageReaction : messageReactions) {
+            log.debug("Removed messagereaction " + messageReaction.toString() + " from message " + message.getId());
+
             messageReaction.removeReaction(FinchBot.getJda().getSelfUser()).complete();
         }
-        FinchBot.getLogger().info("COMMAND RemoveEmoteChoices by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
     }
 }

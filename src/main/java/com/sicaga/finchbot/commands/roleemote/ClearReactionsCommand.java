@@ -5,10 +5,15 @@ import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class ClearReactionsCommand extends Command {
+
+    Logger log = LoggerFactory.getLogger(ClearReactionsCommand.class);
+
     public ClearReactionsCommand() {
         this.name = "clearreactions";
         this.help = "Removes all reactions from a message";
@@ -38,7 +43,7 @@ public class ClearReactionsCommand extends Command {
                 Message message = event.getTextChannel().retrieveMessageById(messageId).complete();
 
                 message.clearReactions().queue();
-                FinchBot.getLogger().info("COMMAND ClearReactions on message: " + messageId + " by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
+                log.info("ClearReactions command on message: " + messageId + " by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
             } catch (ErrorResponseException e) {
                 if (e.getErrorResponse().toString().equalsIgnoreCase("unknown_message")) { // Message not found
                     event.replyError(e.getMeaning() + ", are you in the correct channel?");
