@@ -7,23 +7,25 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
 public class MessageReactionRemoveListener extends ListenerAdapter {
+    Logger log = LoggerFactory.getLogger(MessageReactionAddListener.class);
+
     @Override
     public void onMessageReactionRemove(MessageReactionRemoveEvent event) {
-        if (event.getReaction().isSelf()) {
-            return;
-        }
+        if (event.getReaction().isSelf()) return; // ignore reactions removed by FinchBot
 
         HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.getConfig().getTrackedMessages();
         Set<String> keys = trackedMessages.keySet();
 
+        // If the message is one that we're tracking
         if (keys.contains(event.getMessageId())) {
-            // The message is one that we're tracking
             ArrayList<RoleEmotePair> reps = trackedMessages.get(event.getMessageId());
 
             for (RoleEmotePair pair : reps) {
@@ -48,8 +50,9 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
                      */
 
                     // Remove the role
-                    sicaga.removeRoleFromMember(user, role).queue();
-                    FinchBot.getLogger().debug("Role " + role.getName() + " removed from member: "+ user.getEffectiveName());
+                    sicaga.removeRoleFromMember(user, role).queue((success) -> {
+                        log.info("Role " + role.getName() + " removed from member: "+ user.getEffectiveName());
+                    });
                 }
             }
         }

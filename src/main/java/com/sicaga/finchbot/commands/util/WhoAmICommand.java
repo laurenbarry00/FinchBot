@@ -8,10 +8,15 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.format.DateTimeFormatter;
 
 public class WhoAmICommand extends Command {
+
+    Logger log = LoggerFactory.getLogger(WhoAmICommand.class);
+
     public WhoAmICommand() {
         this.name = "whoami";
         this.help = "Prints information about you";
@@ -23,6 +28,8 @@ public class WhoAmICommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        log.info("WhoAmI command by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
+
         User user = event.getAuthor();
         Guild guild = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
         Member userMember = guild.getMember(user);

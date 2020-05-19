@@ -4,10 +4,15 @@ import com.jagrosh.jdautilities.command.Command;
 import com.jagrosh.jdautilities.command.CommandEvent;
 import com.sicaga.finchbot.FinchBot;
 import net.dv8tion.jda.api.entities.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class RemoveReactionCommand extends Command {
+
+    Logger log = LoggerFactory.getLogger(RemoveReactionCommand.class);
+
     public RemoveReactionCommand() {
         this.name = "removereaction";
         this.help = "Removes a reaction from a message";
@@ -43,10 +48,13 @@ public class RemoveReactionCommand extends Command {
             Message message = channel.retrieveMessageById(messageId).complete();
             List<MessageReaction> mrList = message.getReactions();
 
+            log.info("RemoveReactionCommand by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
+
             for (MessageReaction mr : mrList) {
                 if (mr.getReactionEmote().getName().equalsIgnoreCase(emoteName)) {
+                    log.info("Removed " + user.getName() + "#" + user.getDiscriminator() + "'s reaction " + mr.toString() + " from message " + mr.getMessageId());
+
                     mr.removeReaction(user).queue();
-                    FinchBot.getLogger().info("COMMAND RemoveReaction (reaction: " + mr.getReactionEmote().getName() + ") on message: " + messageId + " by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
                     return;
                 }
             }

@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +17,8 @@ import java.util.Set;
 
 
 public class ReadyListener extends ListenerAdapter {
+
+    Logger log = LoggerFactory.getLogger(ReadyListener.class);
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
@@ -26,19 +30,18 @@ public class ReadyListener extends ListenerAdapter {
         FinchBot.getConfig().loadSocialMedia();
 
         Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
-        assert sicaga != null;
 
         if (FinchBot.getConfig().isCollectEmotesModeEnabled()) {
             try {
-                FinchBot.getLogger().info("EMOTE COLLECTION MODE");
-                FinchBot.getLogger().info("\nEmotes:\n" + sicaga.getEmotes() + "\n");
-                FinchBot.getLogger().info("SHUTTING DOWN...");
+                log.debug("EMOTE COLLECTION MODE");
+                log.debug("\nEmotes:\n" + sicaga.getEmotes() + "\n");
+                log.debug("SHUTTING DOWN...");
 
                 FinchBot.getJda().shutdown();
                 return;
             } catch (Exception e) { /* Don't need to do anything, just shut it down */ }
         } else if (FinchBot.getConfig().shouldSkipRoleEmoteInit()) {
-            FinchBot.getLogger().info("Skipping role emote pair initialization (adding emotes to tracked messages)...");
+            log.info("Skipping role emote pair initialization (not adding emotes to tracked messages)...");
             return;
         }
 
@@ -50,7 +53,6 @@ public class ReadyListener extends ListenerAdapter {
 
         // loop through all the messages that we're tracking
         for (String messageId : keys) {
-            assert channel != null;
             Message message = channel.retrieveMessageById(messageId).complete();
 
             List<MessageReaction> emotes = message.getReactions();
@@ -61,9 +63,11 @@ public class ReadyListener extends ListenerAdapter {
                 if (rep.isShouldRemoveEmoteAferAdding()) {
                     try {
                         List<Emote> emoteList = sicaga.getEmotesByName(rep.getEmote(), true);
-                        message.addReaction(emoteList.get(0)).queue();
+                        message.addReaction(emoteList.get(0)).queue((success) -> {
+                            log.debug("Added RoleEmote emote " + rep.getEmote() + " to message " + messageId);
+                        });
                     } catch (IndexOutOfBoundsException e) {
-                        FinchBot.getLogger().debug("Color emote " + rep.getEmote() + " already added to message " + messageId);
+                        log.debug("Color emote " + rep.getEmote() + " already added to message " + messageId);
                     }
                 } else {
                     // Compare the reactions already on the message to our role emote pairs and add

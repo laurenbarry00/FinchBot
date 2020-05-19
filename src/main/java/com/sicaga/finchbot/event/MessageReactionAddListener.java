@@ -7,7 +7,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.managers.GuildManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,14 +16,17 @@ import java.util.List;
 import java.util.Set;
 
 public class MessageReactionAddListener extends ListenerAdapter {
+    Logger log = LoggerFactory.getLogger(MessageReactionAddListener.class);
+
     @Override
     public void onMessageReactionAdd(MessageReactionAddEvent event) {
         if (event.getReaction().isSelf()) return; // if this event was triggered by finchbot, just return/ignore
 
         HashMap<String, ArrayList<RoleEmotePair>> trackedMessages = FinchBot.getConfig().getTrackedMessages();
         Set<String> keys = trackedMessages.keySet();
+
+        // If the message is one that we're tracking
         if (keys.contains(event.getMessageId())) {
-            // The message is one that we're tracking
             ArrayList<RoleEmotePair> reps = trackedMessages.get(event.getMessageId());
 
             // this is the name of the emote that the user clicked
@@ -36,9 +40,8 @@ public class MessageReactionAddListener extends ListenerAdapter {
             for (RoleEmotePair pair : reps) {
                 // find the role emote pair that corresponds to the emote the user clicked
                 if (emoteName.equalsIgnoreCase(pair.getEmote())) {
-                    // this is the role the user wants added
+                    log.info(user.getEffectiveName() + " initiated RoleEmote add: " + emoteName);
                     Role role = pair.getRole();
-
 
                     /*
                     Sicaga needs to be defined inside this scope to prevent this error:
@@ -49,14 +52,16 @@ public class MessageReactionAddListener extends ListenerAdapter {
                     // Check if it's a color role emote pair. If so, we need to remove the emote they just added, and remove all the other color roles from the user
                     if (pair.isShouldRemoveEmoteAferAdding()) {
                         // Remove the reaction that the user put
-                        event.getReaction().removeReaction(event.getUser()).queue();
+                        event.getReaction().removeReaction(event.getUser()).queue((success) -> {
+                            log.info("Removed reaction " + event.getReactionEmote().getName() + " by user " + user.getEffectiveName());
+                        });
 
                         // Find all the color roles that aren't the new color the user wanted
                         List<Role> rolesToRemove = new ArrayList<>();
                         for (Role r : usersCurrentRoles) {
                             // This will match for color roles only (ex: "red3" or "violet1")
                             if (r.getName().matches("\\b\\w+\\d\\b")) {
-                                FinchBot.getLogger().debug("Added " + r.getName() + " to list of roles to remove from user " + user.getEffectiveName());
+                                log.info("Added role " + r.getName() + " to list of roles being removed from user " + user.getEffectiveName());
                                 rolesToRemove.add(r);
                             }
                         }
@@ -67,10 +72,13 @@ public class MessageReactionAddListener extends ListenerAdapter {
                         rolesToAdd.add(role);
 
                         // simultaneously remove all the color roles that aren't the one the user wants and add the one they want
-                        sicaga.modifyMemberRoles(user, rolesToAdd, rolesToRemove).queue();
+                        sicaga.modifyMemberRoles(user, rolesToAdd, rolesToRemove).queue((success) -> {
+                            log.info("Color role " + role.getName() + " added to user " + user.getEffectiveName() + " (other color roles removed)");
+                        });
                     } else { // it's not a color role. Simply add the role to the user
-                        FinchBot.getLogger().debug("Role " + role.getName() + " added to member: "+ user.getEffectiveName());
-                        sicaga.addRoleToMember(user, role).queue();
+                        sicaga.addRoleToMember(user, role).queue((success) -> {
+                            log.info("Role " + role.getName() + " added to user " + user.getEffectiveName());
+                        });
                     }
                     return;
                 }

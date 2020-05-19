@@ -4,11 +4,12 @@ import com.jagrosh.jdautilities.menu.Paginator;
 import com.sicaga.finchbot.FinchBot;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SocialMediaPostSession {
     // The artist's Discord account, as a guild Member entity
@@ -27,14 +28,7 @@ public class SocialMediaPostSession {
     // the currently selected template
     String selectedTemplate;
 
-    public SocialMediaPostSession() {
-        this.sessionUser = null;
-        this.artistName = null;
-        this.comicTitle = null;
-        this.comicUrl = null;
-
-        this.selectedTemplate = "";
-    }
+    private Logger log = LoggerFactory.getLogger(SocialMediaPostSession.class);
 
     // constructor w/ comic info & discord user
     public SocialMediaPostSession(Member sessionUser, String artistName, String comicTitle, String comicUrl) {
@@ -50,40 +44,12 @@ public class SocialMediaPostSession {
         return sessionUser;
     }
 
-    public void setSessionUser(Member sessionUser) {
-        this.sessionUser = sessionUser;
-    }
-
     public String getArtistName() {
         return artistName;
     }
 
-    public void setArtistName(String artistName) {
-        this.artistName = artistName;
-    }
-
-    public String getComicTitle() {
-        return comicTitle;
-    }
-
-    public void setComicTitle(String comicTitle) {
-        this.comicTitle = comicTitle;
-    }
-
-    public String getComicUrl() {
-        return comicUrl;
-    }
-
-    public void setComicUrl(String comicUrl) {
-        this.comicUrl = comicUrl;
-    }
-
     public String getSelectedTemplate() {
         return selectedTemplate;
-    }
-
-    public void setSelectedTemplate(String selectedTemplate) {
-        this.selectedTemplate = selectedTemplate;
     }
 
     public void showPreview(MessageChannel channel) {
@@ -105,7 +71,7 @@ public class SocialMediaPostSession {
                     try {
                         m.clearReactions().queue();
                     } catch (Exception e) {
-                        FinchBot.getLogger().info(e.getMessage());
+                        log.error(e.getMessage());
                     }
 
                     // Store the user's selection in an embed to repeat back to them
@@ -115,7 +81,7 @@ public class SocialMediaPostSession {
 
                     // send the embed, log the user's selection
                     channel.sendMessage(builder.build()).queue();
-                    FinchBot.getLogger().debug(sessionUser.getEffectiveName() + " selected template: " + this.selectedTemplate);
+                    log.debug(sessionUser.getEffectiveName() + " selected social media template: " + this.selectedTemplate);
 
                     // remove the paginator embed to keep clutter down
                     m.delete().queue();

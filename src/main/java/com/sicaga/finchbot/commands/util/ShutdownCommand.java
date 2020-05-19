@@ -6,11 +6,15 @@ import com.jagrosh.jdautilities.commons.waiter.EventWaiter;
 import com.sicaga.finchbot.FinchBot;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.concurrent.TimeUnit;
 
 public class ShutdownCommand extends Command {
     private EventWaiter waiter;
+
+    Logger log = LoggerFactory.getLogger(ShutdownCommand.class);
 
     public ShutdownCommand() {
         this.name = "shutdown";
@@ -25,6 +29,7 @@ public class ShutdownCommand extends Command {
 
     @Override
     protected void execute(CommandEvent event) {
+        log.info("Shutdown command by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
         event.reply("Are you sure you would like to shut down FinchBot? Type `" + FinchBot.getConfig().getPrefix() + "confirm`.");
 
         // wait for 1 minutes, check for user to confirm shutdown
@@ -39,11 +44,13 @@ public class ShutdownCommand extends Command {
 
     private void shutdown(CommandEvent event) {
         try {
+            log.info("Shutdown CONFIRMED by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
+
             event.reactWarning();
             FinchBot.getJda().getPresence().setPresence(OnlineStatus.OFFLINE, true);
             Thread.sleep(50);
 
-            FinchBot.getLogger().info("COMMAND Shutdown by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
+
 
             // disconnect from websocket, exit program
             FinchBot.getJda().shutdown();

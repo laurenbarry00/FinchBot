@@ -9,16 +9,18 @@ import com.sicaga.finchbot.util.SocialMediaPostSession;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
-import twitter4j.Status;
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import twitter4j.*;
 
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class PostCommand extends Command {
     EventWaiter waiter;
+
+    Logger log = LoggerFactory.getLogger(PostCommand.class);
+
     public PostCommand(EventWaiter waiter) {
         this.name = "post";
         this.help = "Posts to Sicaga social media. Use `!update` to select a post template first.";
@@ -55,6 +57,8 @@ public class PostCommand extends Command {
                 Message success = event.getChannel().sendMessage(builder.build()).complete();
                 success.addReaction("\u2705").queue();
 
+                log.info("Post command executed by: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator() + ", requesting confirmation.");
+
                 waiter.waitForEvent(MessageReactionAddEvent.class,
                         e -> {
                             // check that it's the person who ran the command
@@ -81,7 +85,7 @@ public class PostCommand extends Command {
         // the session is still preserved in case the tweet doesn't go through, in which case we'll add it back to the active list
         FinchBot.removeSocialMediaSession(session);
 
-        FinchBot.getLogger().info(session.getArtistName() + " initiated post to social media. Message content: " + session.getSelectedTemplate());
+        log.info(session.getArtistName() + " confirmed post to social media. Message content: " + session.getSelectedTemplate());
 
         try {
             // send the tweet
@@ -99,7 +103,7 @@ public class PostCommand extends Command {
             embedBuilder.addField("Tweet sent successfully. See it here:", linkBuilder, false);
             returnChannel.sendMessage(embedBuilder.build()).queue();
 
-            FinchBot.getLogger().info("Tweet sent by " + session.getArtistName() + " with content: " + session.getSelectedTemplate());
+            log.info("Tweet sent by " + session.getArtistName() + " with content: " + session.getSelectedTemplate());
         } catch (TwitterException e) {
             // add the session back to the list of active sessions, since the tweet didn't go through.
             FinchBot.addSocialMediaSession(session);
@@ -110,7 +114,7 @@ public class PostCommand extends Command {
                 returnChannel.sendMessage("There was a problem sending " + session.getSessionUser().getAsMention() +
                         "'s post to Twitter. Please wait and try again later.").queue();
 
-                FinchBot.getLogger().error(e.getMessage());
+                log.error(e.getMessage());
             }
         }
     }
