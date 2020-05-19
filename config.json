@@ -1,0 +1,91 @@
+/* DEV CONFIG */
+{
+	"token": "", // PRIVATE *DEV
+	"ownerId": "222047130007764993", // ironohki 
+	"guildId": "464369469595058176",
+	"prefix": "!",
+	"dev": {
+		"devModeEnabled": true, // if true, only the owner and below dev users can execute commands
+		"collectEmotesModeEnabled": false, // if true, bot will print custom emote IDs to console then shut down
+		"devUserIds": [ // co-owners, can use owner-only commands
+			"108992296896196608", // fermataplays
+			"156651495884849153" // craig
+		]
+	},
+    "shouldSkipRoleEmoteInit": true,
+	"roleEmoteChannel": "588556612088627231", // the channel that the role assignment messages are in
+	"trackedMessages": {
+		/*
+		============== EXAMPLE FORMAT ==============
+		"tracked message ID": {
+			"role ID": ["emote ID or emoji unicode", true/false]   // (true for color roles ONLY, otherwise should be false)
+			...
+		}
+		...
+
+		Use comments to keep things organized/easy to follow!
+		*/
+
+		"590597324720308254": { // Color Set Dark
+			"590598521816875050": ["red1", true], // red1
+			"590598703040036869": ["orange1", true], // orange1
+			"590598789434310669": ["yellow1", true], // yellow1
+			"590598881381711887": ["green1", true], // green1
+			"590598976806584351": ["blue1", true], // blue1
+			"590599058708758529": ["teal1", true], // teal1
+			"590599141655183453": ["violet1", true]  // violet1
+		},
+
+		"590597310392827935": { // Color Set Bright
+			"590598618319421450": ["red2", true], // red2
+			"590598743322132500": ["orange2", true], // orange2
+			"590598832111222806": ["yellow2", true], // yellow2
+			"590598902189916164": ["green2", true], // green2
+			"590599006263181312": ["blue2", true], // blue2
+			"590599095513645078": ["teal2", true], // teal2
+			"590599200975093787": ["violet2", true]  // violet2
+		},
+
+		"590597264339370024": { // Color Set Light
+			"590598682261323796": ["red3", true], // red3
+			"590598763194875934": ["orange3", true], // orange3
+			"590598856404893706": ["yellow3", true], // yellow3
+			"590598921466675200": ["green3", true], // green3
+			"590599031038803988": ["blue3", true], // blue3
+			"590599114429956152": ["teal3", true], // teal3
+			"590599224115200000": ["violet3", true]  // violet3
+		},
+
+		"588873250675884052": { // Announcements Roles
+			"590603157361655835": ["\uD83D\uDDDE", false], // announcements
+			"590603192623038472": ["\uD83C\uDFA8", false], // challenges
+			"590603218778849334": ["\uD83D\uDDEF", false], // social-media
+			"590603275565269022": ["\u2728",	   false], // volunteers
+			"590603291985969152": ["\uD83C\uDF79", false], // events
+			"590603333665030159": ["\uD83C\uDFAE", false]  // vidja
+		},
+
+		"588832849625350167": { // Ping Roles
+			"590597468698181642": ["\uD83D\uDD8C", false], // help-with-drawing
+			"590597541599510563": ["\uD83D\uDCDD", false], // help-with-writing
+			"590597628492775434": ["\uD83D\uDDA5", false], // help-with-technical
+			"590597674902749234": ["\uD83D\uDEE0", false], // help-with-tools
+			"590597706750099476": ["\uD83D\uDCD6", false], // help-with-printing
+			"590597749867806721": ["\uD83D\uDCB5", false], // help-with-promotion
+			"590597792049659925": ["\uD83D\uDDBC", false]  // critique-request
+		},	
+
+		"590603015094927380": { // Pronouns
+			"590597936098836480": ["he", false], // he
+			"590597954193195038": ["him", false], // him
+			"590597974195961877": ["she", false], // she
+			"590597991593803795": ["her", false], // her
+			"590598009650151444": ["they", false], // they
+			"590598029195870258": ["them", false], // them
+			"590598077719642116": ["xe", false], // xe
+			"590598090755670056": ["xer", false], // xer
+			"590598117217271810": ["any", false] // any
+		}
+	}
+
+}
