@@ -62,7 +62,7 @@ public class PostEmoteChoicesCommand extends Command {
         }
     }
 
-    public void addRoleEmotesToMessage(Message message, List<MessageReaction> emotes, RoleEmotePair rep) {
+    public static void addRoleEmotesToMessage(Message message, List<MessageReaction> emotes, RoleEmotePair rep) {
         for (MessageReaction mr : emotes) {
             MessageReaction.ReactionEmote e = mr.getReactionEmote();
             if (e.getName().equalsIgnoreCase(rep.getEmote())) {
