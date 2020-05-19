@@ -26,7 +26,6 @@ public class Config {
 
     private ArrayList<String> devUserIds;
     private HashMap<String, ArrayList<RoleEmotePair>> trackedMessages;
-    private JsonObject socialMediaWhitelist;
     private ArrayList<String> socialTemplates;
 
     private Logger log = LoggerFactory.getLogger(Config.class);
@@ -44,7 +43,6 @@ public class Config {
 
         this.devUserIds = new ArrayList<>();
         this.trackedMessages = new HashMap<>();
-        this.socialMediaWhitelist = null;
         this.socialTemplates = new ArrayList<>();
     }
 
@@ -86,10 +84,6 @@ public class Config {
 
     public boolean shouldSkipRoleEmoteInit() {
         return this.shouldSkipRoleEmoteInit;
-    }
-
-    public JsonObject getSocialMediaWhitelist() {
-        return this.socialMediaWhitelist;
     }
 
     public ArrayList<String> getSocialTemplates() {
@@ -223,7 +217,8 @@ public class Config {
         }
     }
 
-    public void loadSocialMedia() {
+    public JsonObject getSocialMediaWhitelist() {
+        JsonObject socialMediaWhitelist;
         try {
             // get the social media whitelist and the users' comic details from remote json
             // getting the json from airtable
@@ -233,9 +228,18 @@ public class Config {
             socialMediaWhitelist = retrieveJsonFromUrl(whitelistUrl);
 
             if (socialMediaWhitelist.size() > 0) {
-                log.debug("Social media whitelist successfully loaded from remote file.");
+                log.debug("Social media whitelist successfully loaded with " + socialMediaWhitelist.size() + " users from remote file.");
+                return socialMediaWhitelist;
             }
 
+        } catch (MalformedURLException e) {
+            log.error("URL to social media whitelist invalid. Social media functions will not work correctly!");
+        }
+        return null;
+    }
+
+    public void loadSocialMediaTemplates() {
+        try {
             // get the post templates from file and populate the list of templates
             // getting the json from airtable
             URL templatesUrl = new URL("http://138.68.253.109/tweetstrings/index.json");
@@ -260,9 +264,8 @@ public class Config {
             if (socialTemplates.size() > 0) {
                 log.debug("Social media templates successfully loaded from file.");
             }
-
         } catch (MalformedURLException e) {
-            log.error("URL to social media posts/templates invalid. Social media functions will not work correctly!");
+            log.error("URL to social media whitelist invalid. Social media functions will not work correctly!");
         }
     }
 

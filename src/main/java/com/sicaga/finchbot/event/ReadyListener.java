@@ -26,8 +26,9 @@ public class ReadyListener extends ListenerAdapter {
         // this needs to be executed onReady as opposed to otherwise because we need to retrieve guild-specific information as we do this
         FinchBot.getConfig().loadRoleEmotePairs();
 
-        // load the social media posting whitelist from file
-        FinchBot.getConfig().loadSocialMedia();
+        // load the social media post templates from file
+        // the whitelist will be requested on each instance of !update
+        FinchBot.getConfig().loadSocialMediaTemplates();
 
         Guild sicaga = FinchBot.getJda().getGuildById(FinchBot.getConfig().getGuildId());
 

@@ -111,8 +111,8 @@ public class PostCommand extends Command {
             if (e.getMessage().contains("duplicate")) {
                 returnChannel.sendMessage("The tweet you are attempting to send is a duplicate. Check Sicaga's twitter to see if it already went through!").queue();
             } else {
-                returnChannel.sendMessage("There was a problem sending " + session.getSessionUser().getAsMention() +
-                        "'s post to Twitter. Please wait and try again later.").queue();
+                returnChannel.sendMessage("There was a problem sending <@" + session.getSessionUser().getId() +
+                        ">'s post to Twitter. Please wait and try again later.").queue();
 
                 log.error(e.getMessage());
             }

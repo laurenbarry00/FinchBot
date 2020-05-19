@@ -50,23 +50,31 @@ public class UpdateCommand extends Command {
                 }
             }
 
-            // get the comic data from Json
-            String artistName = userComicDetails.get("artistName").getAsString();
-            String comicTitle = userComicDetails.get("comicTitle").getAsString();
-            String comicUrl = userComicDetails.get("comicUrl").getAsString();
+            try {
+                // get the comic data from Json
+                String artistName = userComicDetails.get("artistName").getAsString();
+                String comicTitle = userComicDetails.get("comicTitle").getAsString();
+                String comicUrl = userComicDetails.get("comicUrl").getAsString();
 
-            // the user doesn't have an existing session, so just create a new one
-            SocialMediaPostSession newSession = new SocialMediaPostSession(event.getMember(), artistName, comicTitle, comicUrl);
-            newSession.showPreview(event.getChannel());
-            FinchBot.addSocialMediaSession(newSession);
+                // the user doesn't have an existing session, so just create a new one
+                SocialMediaPostSession newSession = new SocialMediaPostSession(event.getMember(), artistName, comicTitle, comicUrl);
+                newSession.showPreview(event.getChannel());
+                FinchBot.addSocialMediaSession(newSession);
 
-            log.info(event.getAuthor().getName() +  "#" + event.getAuthor().getDiscriminator() + " created a social media post session.");
+                log.info(event.getAuthor().getName() +  "#" + event.getAuthor().getDiscriminator() + " created a social media post session.");
+            } catch (NullPointerException e) {
+                // one of the above fields is missing, error out
+                log.error("One or more user fields in social media whitelist is empty!");
+                User ironOhki = FinchBot.getJda().getUserById(222047130007764993L);
+                event.replyError("You're whitelisted, but your settings weren't configured correctly. Please contact <@" + ironOhki.getId() + ">");
+                return;
+            }
         } else {
             log.info("Update command by non-whitelisted user: " + event.getAuthor().getName() + "#" + event.getAuthor().getDiscriminator());
 
             // The user isn't whitelisted. Point them to Jer for more info/to see about getting whitelisted.
             User ironOhki = FinchBot.getJda().getUserById(222047130007764993L);
-            event.replyError("You are not on the whitelist (list of allowed users) for posting to Sicaga social media. Please contact " + ironOhki.getAsTag() + " for more information.");
+            event.replyError("You are not on the whitelist (list of allowed users) for posting to Sicaga social media. Please contact <@" + ironOhki.getId() + "> for more information.");
         }
     }
 }
