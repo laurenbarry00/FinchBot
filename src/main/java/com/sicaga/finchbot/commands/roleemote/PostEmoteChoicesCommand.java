@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class PostEmoteChoicesCommand extends Command {
 
-    Logger log = LoggerFactory.getLogger(PostEmoteChoicesCommand.class);
+    static Logger log = LoggerFactory.getLogger(PostEmoteChoicesCommand.class);
 
     public PostEmoteChoicesCommand() {
         this.name = "postemotechoices";
