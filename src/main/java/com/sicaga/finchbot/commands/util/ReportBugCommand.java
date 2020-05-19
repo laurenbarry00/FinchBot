@@ -35,7 +35,7 @@ public class ReportBugCommand extends Command {
         // create and format the embed with the report contents and the info of who submitted the report
         CustomEmbedBuilder builder = new CustomEmbedBuilder();
         builder.setTitle("FinchBot Bug Report");
-        builder.addField("Submitter", event.getAuthor().getAsMention(), false);
+        builder.addField("Submitter", "<@" + event.getAuthor().getId() + ">", false);
         builder.addField("Report Contents", event.getArgs(), false);
 
         // DM lauren and jer with the bug report
