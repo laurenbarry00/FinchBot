@@ -93,9 +93,8 @@ public class FinchBot {
         );
 
         log.info("Initializing JDA bot client.");
-        jda = new JDABuilder(AccountType.BOT)
-                .setToken(config.getToken())
 
+        jda = JDABuilder.createDefault(config.getToken())
                 // set temporary status while bot is loading
                 // this is set to online upon ReadyEvent
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
