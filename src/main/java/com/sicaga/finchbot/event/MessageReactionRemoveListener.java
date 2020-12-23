@@ -37,8 +37,11 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
                 // this is the name of the emote that the user clicked
                 String emoteName = event.getReactionEmote().getName();
 
+                // handle emoji (unicode) and emote (custom-uploaded)
+                if (event.getReactionEmote().isEmoji()) emoteName = event.getReactionEmote().getEmoji();
+
                 // this is the user that we're removing the role from
-                Member user = event.getMember();
+                Member user = event.retrieveMember().complete();
 
                 // If the reaction matches a role emote pair, remove the role associated
                 if (emoteName.equalsIgnoreCase(pair.getEmote())) {
@@ -50,9 +53,7 @@ public class MessageReactionRemoveListener extends ListenerAdapter {
                      */
 
                     // Remove the role
-                    sicaga.removeRoleFromMember(user, role).queue((success) -> {
-                        log.info("Role " + role.getName() + " removed from member: "+ user.getEffectiveName());
-                    });
+                    sicaga.removeRoleFromMember(user, role).queue((success) -> log.info("Role " + role.getName() + " removed from member: "+ user.getEffectiveName()));
                 }
             }
         }
